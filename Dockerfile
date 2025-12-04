@@ -1,4 +1,4 @@
-FROM gradle:9.5-jdk20 AS build
+FROM gradle:9.5-jdk20-alpine AS build
 WORKDIR /app
 COPY build.gradle settings.gradle gradle.properties ./
 COPY gradle ./gradle
