@@ -7,8 +7,8 @@ import dev.knalis.sao_telegram_bot.model.user.User;
 import dev.knalis.sao_telegram_bot.repo.jpa.GangRepo;
 import dev.knalis.sao_telegram_bot.repo.jpa.UserRepo;
 
-import dev.knalis.sao_telegram_bot.service.crud.BalanceService;
-import dev.knalis.sao_telegram_bot.service.crud.GangMembershipService;
+import dev.knalis.sao_telegram_bot.service.BalanceService;
+import dev.knalis.sao_telegram_bot.service.GangMembershipService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

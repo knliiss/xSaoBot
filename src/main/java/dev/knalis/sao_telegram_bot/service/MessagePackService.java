@@ -1,4 +1,4 @@
-package dev.knalis.sao_telegram_bot.service.crud;
+package dev.knalis.sao_telegram_bot.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -4,7 +4,7 @@ import dev.knalis.sao_telegram_bot.composer.ComposerContext;
 import dev.knalis.sao_telegram_bot.composer.ContextKey;
 import dev.knalis.sao_telegram_bot.composer.intrf.BackComposer;
 import dev.knalis.sao_telegram_bot.dto.Button;
-import dev.knalis.sao_telegram_bot.service.crud.MessagePackService;
+import dev.knalis.sao_telegram_bot.service.MessagePackService;
 import dev.knalis.sao_telegram_bot.service.crud.impl.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

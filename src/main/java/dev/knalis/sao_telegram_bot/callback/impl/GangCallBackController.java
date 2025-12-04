@@ -6,7 +6,7 @@ import dev.knalis.sao_telegram_bot.callback.annotation.CallBackController;
 import dev.knalis.sao_telegram_bot.callback.annotation.CallBackMethod;
 import dev.knalis.sao_telegram_bot.callback.annotation.PathVariable;
 import dev.knalis.sao_telegram_bot.composer.ComposerContext;
-import dev.knalis.sao_telegram_bot.service.crud.GangMembershipService;
+import dev.knalis.sao_telegram_bot.service.GangMembershipService;
 import dev.knalis.sao_telegram_bot.service.telegram.ConsumerService;
 import dev.knalis.sao_telegram_bot.service.MenuService;
 import dev.knalis.sao_telegram_bot.service.telegram.TelegramSenderService;

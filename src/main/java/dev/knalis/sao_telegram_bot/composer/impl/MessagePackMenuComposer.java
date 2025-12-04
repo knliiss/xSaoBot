@@ -6,7 +6,7 @@ import dev.knalis.sao_telegram_bot.composer.intrf.ListableComposer;
 import dev.knalis.sao_telegram_bot.composer.intrf.PageComposer;
 import dev.knalis.sao_telegram_bot.dto.Button;
 import dev.knalis.sao_telegram_bot.model.user.settings.MessagePack;
-import dev.knalis.sao_telegram_bot.service.crud.MessagePackService;
+import dev.knalis.sao_telegram_bot.service.MessagePackService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;

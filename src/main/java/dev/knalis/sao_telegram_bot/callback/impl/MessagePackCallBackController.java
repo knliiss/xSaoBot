@@ -8,7 +8,7 @@ import dev.knalis.sao_telegram_bot.callback.annotation.PathVariable;
 import dev.knalis.sao_telegram_bot.composer.ComposerContext;
 import dev.knalis.sao_telegram_bot.composer.ContextKey;
 import dev.knalis.sao_telegram_bot.service.MenuService;
-import dev.knalis.sao_telegram_bot.service.crud.MessagePackService;
+import dev.knalis.sao_telegram_bot.service.MessagePackService;
 import dev.knalis.sao_telegram_bot.service.telegram.TelegramSenderService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;

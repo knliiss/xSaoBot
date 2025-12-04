@@ -1,4 +1,4 @@
-package dev.knalis.sao_telegram_bot.service.crud;
+package dev.knalis.sao_telegram_bot.service;
 
 import dev.knalis.sao_telegram_bot.exception.BalanceException;
 import dev.knalis.sao_telegram_bot.exception.EntityException;
