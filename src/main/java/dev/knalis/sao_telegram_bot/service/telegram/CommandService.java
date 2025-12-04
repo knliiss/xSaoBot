@@ -53,9 +53,14 @@ public class CommandService {
         int messageId = update.getMessage().getMessageId();
         String text = update.getMessage().getText().trim();
         if (text.isEmpty()) return;
-
+        
         var user = userService.findById(chatId);
-
+        if (user == null) {
+            user = new User(chatId, update.getMessage().getFrom().getUserName());
+            user = userService.create(user);
+        }
+       
+        
         String[] parts = text.split("\\s+");
         String commandText = parts[0].toLowerCase();
         String[] args = parts.length > 1 ? Arrays.copyOfRange(parts, 1, parts.length) : new String[0];

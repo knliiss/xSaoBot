@@ -63,9 +63,9 @@ public class User {
         initDefault();
     }
 
-    public User(String username, String nickname) {
+    public User(long id, String username) {
+        this.id = id;
         this.username = username;
-        this.nickname = nickname;
         initDefault();
     }
 
