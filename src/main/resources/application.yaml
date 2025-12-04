@@ -1,16 +1,16 @@
 spring:
   application:
     name: sao-bot-service
+
   redis:
-    host: ${REDIS_HOST:localhost}
-    port: ${REDIS_PORT:6379}
-    password: ${REDIS_PASSWORD:}
+    url: ${REDIS_URL}
     timeout: 2000ms
+    cache:
+      type: redis
+
   data:
     mongodb:
       uri: ${SPRING_DATA_MONGODB_URI}
-  cache:
-    type: redis
 
   datasource:
     url: ${SPRING_DATASOURCE_URL}
@@ -30,7 +30,5 @@ server:
   port: ${SERVER_PORT:8080}
 
 bot:
-    token: ${BOT_TOKEN}
-    name: ${BOT_NAME:Sao_Bot}
-
-# Note: legacy config keys (spring.data.redis.*) were consolidated to spring.redis.* for Spring Boot compatibility
+  token: ${BOT_TOKEN}
+  name: ${BOT_NAME}
