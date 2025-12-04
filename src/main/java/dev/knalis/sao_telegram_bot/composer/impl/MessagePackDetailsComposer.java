@@ -4,7 +4,7 @@ import dev.knalis.sao_telegram_bot.composer.ComposerContext;
 import dev.knalis.sao_telegram_bot.composer.ContextKey;
 import dev.knalis.sao_telegram_bot.composer.intrf.BackComposer;
 import dev.knalis.sao_telegram_bot.dto.Button;
-import dev.knalis.sao_telegram_bot.service.MessagePackService;
+import dev.knalis.sao_telegram_bot.service.crud.MessagePackService;
 import dev.knalis.sao_telegram_bot.service.crud.impl.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class MessagePackDetailsComposer implements BackComposer {
     public String composeText(ComposerContext context) {
         long userId = Long.parseLong(context.get(ContextKey.CHAT_ID));
         String packId = context.get("messagePackId");
-        var pack = messagePackService.getPackById(packId);
+        var pack = messagePackService.getById(packId);
         var user = userService.findById(userId);
         boolean owned = user.getOwnedMessagePacksIds().contains(packId);
         

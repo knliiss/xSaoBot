@@ -8,7 +8,7 @@ import dev.knalis.sao_telegram_bot.callback.annotation.PathVariable;
 import dev.knalis.sao_telegram_bot.composer.ComposerContext;
 import dev.knalis.sao_telegram_bot.composer.ContextKey;
 import dev.knalis.sao_telegram_bot.service.MenuService;
-import dev.knalis.sao_telegram_bot.service.MessagePackService;
+import dev.knalis.sao_telegram_bot.service.crud.MessagePackService;
 import dev.knalis.sao_telegram_bot.service.telegram.TelegramSenderService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -62,7 +62,7 @@ public class MessagePackCallBackController extends AbstractCallBackController {
             context.put(ContextKey.PAGE, backPage);
             context.put("messagePackId", messagePackId);
             context.put(ContextKey.BACK_CALLBACK_URL, "messagepack/" + backPage);
-            messagePackService.buyPack(chatId, messagePackId);
+            messagePackService.buyMessagePack(messagePackId, chatId);
             var sendMessage = menuService.getMessagePackMenu(context, messagePackId);
             editMessage(chatId, messageId, sendMessage);
         }, "❌ Не удалось купить пакет сообщений. Проверьте баланс.");
