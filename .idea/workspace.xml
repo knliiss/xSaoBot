@@ -4,13 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0c87b74f-bc4d-44a3-bd79-33a29679470a" name="Changes" comment="Add Rarity enum, refactor DTOs, and enhance services for reminders and message packs">
-      <change afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/client/dto/NotificationSettingsDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/callback/impl/SettingsCallBackController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/callback/impl/SettingsCallBackController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/client/api/UserSettingsApiClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/client/api/UserSettingsApiClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/client/dto/SettingsDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/client/dto/SettingsDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/composer/impl/SettingsMenuComposer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/composer/impl/SettingsMenuComposer.java" afterDir="false" />
+    <list default="true" id="0c87b74f-bc4d-44a3-bd79-33a29679470a" name="Changes" comment="remove redis">
+      <change beforePath="$PROJECT_DIR$/build/libs/sao_telegram_bot-0.0.1-SNAPSHOT-plain.jar" beforeDir="false" afterPath="$PROJECT_DIR$/build/libs/sao_telegram_bot-0.0.1-SNAPSHOT-plain.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/libs/sao_telegram_bot-0.0.1-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/build/libs/sao_telegram_bot-0.0.1-SNAPSHOT.jar" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,11 +52,11 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Dockerfile" />
         <option value="Exception" />
         <option value="AnnotationType" />
         <option value="Class" />
         <option value="Interface" />
+        <option value="Dockerfile" />
       </list>
     </option>
   </component>
@@ -75,7 +71,7 @@
 }</component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/knliiss/sao_telegram_bot.git&quot;,
+    &quot;url&quot;: &quot;https://github.com/knliiss/xSaoBot.git&quot;,
     &quot;accountId&quot;: &quot;476a8ad0-c782-44ef-8ba1-a91d38e74431&quot;
   }
 }</component>
@@ -84,7 +80,7 @@
   &quot;isMigrated&quot;: true
 }</component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="Security Analysis" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 2
@@ -95,6 +91,7 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;Docker.Dockerfile build.executor&quot;: &quot;Run&quot;,
     &quot;Gradle.Download Sources.executor&quot;: &quot;Run&quot;,
     &quot;Gradle.sao_telegram_bot [build].executor&quot;: &quot;Run&quot;,
     &quot;Gradle.sao_telegram_bot [openApiGenerate].executor&quot;: &quot;Run&quot;,
@@ -102,7 +99,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/knalis/dev/java/sao_telegram_bot/src/main/java/dev/knalis/sao_telegram_bot/client/model&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/knalis/dev/java/sao_telegram_bot/src/main/java/dev/knalis/sao_telegram_bot&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -112,6 +109,9 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="ReactorSettings">
+    <option name="notificationShown" value="true" />
+  </component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="dev.knalis.sao_telegram_bot.service" />
@@ -121,8 +121,11 @@
       <recent name="dev.knalis.sao_telegram_bot.bot" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot" />
+      <recent name="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/service/crud" />
+      <recent name="$PROJECT_DIR$/src/main/resources" />
+      <recent name="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/model" />
       <recent name="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/client/model" />
-      <recent name="$PROJECT_DIR$" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="dev.knalis.sao_telegram_bot.client.dto" />
@@ -180,9 +183,27 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Dockerfile build" type="docker-deploy" factoryName="dockerfile" temporary="true" server-name="Docker">
+      <deployment type="dockerfile">
+        <settings>
+          <option name="imageTag" value="gradle9.5-jdk20-alpine_build" />
+          <option name="buildCliOptions" value="--target build" />
+          <option name="buildOnly" value="true" />
+          <option name="sourceFilePath" value="Dockerfile" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="docker-deploy" factoryName="dockerfile" temporary="true">
+      <deployment type="dockerfile">
+        <settings />
+      </deployment>
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Gradle.sao_telegram_bot [build]" />
+        <item itemvalue="Docker.Dockerfile build" />
         <item itemvalue="Gradle.sao_telegram_bot [openApiGenerate]" />
       </list>
     </recent_temporary>
@@ -211,6 +232,7 @@
       <workItem from="1760690741187" duration="16281000" />
       <workItem from="1761471346064" duration="492000" />
       <workItem from="1761472009431" duration="1283000" />
+      <workItem from="1764874343311" duration="22041000" />
     </task>
     <task id="LOCAL-00001" summary="Refactor package structure, add DTOs, and enhance bot functionality&#10;&#10;- Moved classes to new package structure for better organization.&#10;- Introduced new DTO classes: ConfigDTO, Drop, PlayerDrops, SettingsDTO, UserCreateRequest, ScheduledMessage, GangMemberDTO, SubscriptionDTO, MessagePackDTO, and UserDTO.&#10;- Updated existing classes to utilize new DTOs.&#10;- Enhanced Dockerfile for improved deployment.&#10;- Added Redis configuration and message queue service for better message handling.&#10;- Implemented user callback controller for managing user interactions.">
       <option name="closed" value="true" />
@@ -236,16 +258,241 @@
       <option name="project" value="LOCAL" />
       <updated>1760887330240</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Add Dockerfile for multi-stage build and GitHub Actions workflow for deployment">
+      <option name="closed" value="true" />
+      <created>1764883896453</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1764883896454</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Enhance deployment workflow with JAR verification and updated flyctl installation">
+      <option name="closed" value="true" />
+      <created>1764884161685</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1764884161685</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Enhance deployment workflow with JAR verification and updated flyctl installation">
+      <option name="closed" value="true" />
+      <created>1764884420012</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1764884420012</updated>
+    </task>
+    <task id="LOCAL-00007" summary="init">
+      <option name="closed" value="true" />
+      <created>1764886338348</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1764886338348</updated>
+    </task>
+    <task id="LOCAL-00008" summary="fix autodeploy">
+      <option name="closed" value="true" />
+      <created>1764886441830</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1764886441830</updated>
+    </task>
+    <task id="LOCAL-00009" summary="fix autodeploy x2">
+      <option name="closed" value="true" />
+      <created>1764886718523</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1764886718523</updated>
+    </task>
+    <task id="LOCAL-00010" summary="fix autodeploy x3">
+      <option name="closed" value="true" />
+      <created>1764886815843</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1764886815843</updated>
+    </task>
+    <task id="LOCAL-00011" summary="fix autodeploy x4">
+      <option name="closed" value="true" />
+      <created>1764886888914</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1764886888914</updated>
+    </task>
+    <task id="LOCAL-00012" summary="fix autodeploy x5">
+      <option name="closed" value="true" />
+      <created>1764886991176</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1764886991176</updated>
+    </task>
+    <task id="LOCAL-00013" summary="fix autodeploy x6">
+      <option name="closed" value="true" />
+      <created>1764887092797</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1764887092797</updated>
+    </task>
+    <task id="LOCAL-00014" summary="fix autodeploy x7">
+      <option name="closed" value="true" />
+      <created>1764887202882</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1764887202882</updated>
+    </task>
+    <task id="LOCAL-00015" summary="update user creation logic and refactor User constructor">
+      <option name="closed" value="true" />
+      <created>1764888016644</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1764888016644</updated>
+    </task>
+    <task id="LOCAL-00016" summary="refactor MessagePack service imports and update method names for clarity">
+      <option name="closed" value="true" />
+      <created>1764888640534</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1764888640534</updated>
+    </task>
+    <task id="LOCAL-00017" summary="refactor service package structure and update imports for consistency">
+      <option name="closed" value="true" />
+      <created>1764890213373</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1764890213373</updated>
+    </task>
+    <task id="LOCAL-00018" summary="update database connection URL to disable SSL mode">
+      <option name="closed" value="true" />
+      <created>1764890550532</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1764890550532</updated>
+    </task>
+    <task id="LOCAL-00019" summary="update MongoDB URI in configuration">
+      <option name="closed" value="true" />
+      <created>1764891041043</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1764891041043</updated>
+    </task>
+    <task id="LOCAL-00020" summary="refactor ReminderMenuComposer to use ScheduledMessageService and update reminder retrieval logic">
+      <option name="closed" value="true" />
+      <created>1764891485338</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1764891485338</updated>
+    </task>
+    <task id="LOCAL-00021" summary="update fly.toml configuration for machine management and adjust minimum running machines">
+      <option name="closed" value="true" />
+      <created>1764891990137</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1764891990137</updated>
+    </task>
+    <task id="LOCAL-00022" summary="add health check configuration for HTTP service in fly.toml">
+      <option name="closed" value="true" />
+      <created>1764892385088</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1764892385088</updated>
+    </task>
+    <task id="LOCAL-00023" summary="update health check configuration in fly.toml to simplify structure">
+      <option name="closed" value="true" />
+      <created>1764892513938</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1764892513938</updated>
+    </task>
+    <task id="LOCAL-00024" summary="add actuator health endpoint configuration and update fly.toml for health checks">
+      <option name="closed" value="true" />
+      <created>1764933836133</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1764933836133</updated>
+    </task>
+    <task id="LOCAL-00025" summary="add immediate deployment strategy to fly.toml">
+      <option name="closed" value="true" />
+      <created>1764937806964</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1764937806964</updated>
+    </task>
+    <task id="LOCAL-00026" summary="remove redis">
+      <option name="closed" value="true" />
+      <created>1764938821234</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1764938821234</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Refactor package structure, add DTOs, and enhance bot functionality&#10;&#10;- Moved classes to new package structure for better organization.&#10;- Introduced new DTO classes: ConfigDTO, Drop, PlayerDrops, SettingsDTO, UserCreateRequest, ScheduledMessage, GangMemberDTO, SubscriptionDTO, MessagePackDTO, and UserDTO.&#10;- Updated existing classes to utilize new DTOs.&#10;- Enhanced Dockerfile for improved deployment.&#10;- Added Redis configuration and message queue service for better message handling.&#10;- Implemented user callback controller for managing user interactions." />
     <MESSAGE value="Add ConfigCallBackController and enhance UserCallBackController for nickname management" />
     <MESSAGE value="Add Rarity enum, refactor DTOs, and enhance services for reminders and message packs" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add Rarity enum, refactor DTOs, and enhance services for reminders and message packs" />
+    <MESSAGE value="Add Dockerfile for multi-stage build and GitHub Actions workflow for deployment" />
+    <MESSAGE value="Enhance deployment workflow with JAR verification and updated flyctl installation" />
+    <MESSAGE value="init" />
+    <MESSAGE value="fix autodeploy" />
+    <MESSAGE value="fix autodeploy x2" />
+    <MESSAGE value="fix autodeploy x3" />
+    <MESSAGE value="fix autodeploy x4" />
+    <MESSAGE value="fix autodeploy x5" />
+    <MESSAGE value="fix autodeploy x6" />
+    <MESSAGE value="fix autodeploy x7" />
+    <MESSAGE value="update user creation logic and refactor User constructor" />
+    <MESSAGE value="refactor MessagePack service imports and update method names for clarity" />
+    <MESSAGE value="refactor service package structure by moving services to the root package" />
+    <MESSAGE value="refactor service package structure and update imports for consistency" />
+    <MESSAGE value="update database connection URL to disable SSL mode" />
+    <MESSAGE value="update MongoDB URI in configuration" />
+    <MESSAGE value="refactor ReminderMenuComposer to use ScheduledMessageService and update reminder retrieval logic" />
+    <MESSAGE value="update fly.toml configuration for machine management and adjust minimum running machines" />
+    <MESSAGE value="add health check configuration for HTTP service in fly.toml" />
+    <MESSAGE value="update health check configuration in fly.toml to simplify structure" />
+    <MESSAGE value="add actuator health endpoint configuration and update fly.toml for health checks" />
+    <MESSAGE value="add immediate deployment strategy to fly.toml" />
+    <MESSAGE value="remove redis" />
+    <option name="LAST_COMMIT_MESSAGE" value="remove redis" />
+  </component>
+  <component name="github-copilot-workspace">
+    <instructionFileLocations>
+      <option value=".github/instructions" />
+    </instructionFileLocations>
+    <promptFileLocations>
+      <option value=".github/prompts" />
+    </promptFileLocations>
   </component>
 </project>

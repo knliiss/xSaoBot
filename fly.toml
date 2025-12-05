@@ -24,7 +24,7 @@ grace_period = "30s"
 restart_limit = 0
 
 [env]
-SPRING_DATASOURCE_URL = "jdbc:postgresql://sao-bot.flycast:5432/SaoBot_Pg_Db?sslmode=disable"
+SPRING_DATASOURCE_URL = "jdbc:postgresql://sao-bot.internal:5432/SaoBot_Pg_Db?sslmode=disable"
 SPRING_DATASOURCE_USERNAME = "postgres"
 SPRING_DATASOURCE_PASSWORD = "nx6RQaLhkIrgaxl"
 BOT_TOKEN = "8391075439:AAHYZZnl8UYtGVfAbppXmA2OE_M7SMJm3xQ"
