@@ -38,3 +38,6 @@ SPRING_DATA_MONGODB_URI = "mongodb+srv://scouser:ZB7NJi3liqXy80AP@sao-cluster.20
   memory = '1gb'
   cpu_kind = 'shared'
   cpus = 1
+
+[deploy]
+strategy = "immediate"
