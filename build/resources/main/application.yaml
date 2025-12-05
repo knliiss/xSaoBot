@@ -2,12 +2,6 @@ spring:
   application:
     name: sao-bot-service
 
-  redis:
-    url: ${REDIS_URL}
-    timeout: 2000ms
-    cache:
-      type: redis
-
   data:
     mongodb:
       uri: ${SPRING_DATA_MONGODB_URI}
@@ -32,3 +26,22 @@ server:
 bot:
   token: ${BOT_TOKEN}
   name: ${BOT_NAME}
+
+# Actuator / health endpoint config used by Fly health checks
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: NEVER
+  server:
+    port: ${MANAGEMENT_PORT:8080}
+
+# Redis removed — using in-memory queue
+# redis:
+#   url: ${REDIS_URL}
+#   timeout: 2000ms
+#   cache:
+#     type: redis

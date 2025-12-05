@@ -44,11 +44,6 @@ dependencies {
     // Actuator for health endpoints
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
-    // Redis
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-    implementation 'org.apache.commons:commons-pool2'
-    implementation 'com.bucket4j:bucket4j-core:8.6.0'
-
     // Spring OpenFeign
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
@@ -69,6 +64,7 @@ dependencies {
     // Testing
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly "org.junit.platform:junit-platform-launcher:${junitPlatformVersion}"
+
 }
 
 dependencyManagement {
