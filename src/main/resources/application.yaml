@@ -32,3 +32,15 @@ server:
 bot:
   token: ${BOT_TOKEN}
   name: ${BOT_NAME}
+
+# Actuator / health endpoint config used by Fly health checks
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: NEVER
+  server:
+    port: ${MANAGEMENT_PORT:8080}

@@ -41,6 +41,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
     runtimeOnly "org.postgresql:postgresql:${postgresVersion}"
 
+    // Actuator for health endpoints
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
     // Redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.apache.commons:commons-pool2'

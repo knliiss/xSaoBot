@@ -14,22 +14,25 @@ auto_start_machines = true
 min_machines_running = 1
 processes = ['app']
 
-[http_service.checks]
-grace_period = "30s"
+[[http_service.checks]]
+# use Spring Boot actuator health endpoint for reliable health checks
+type = "http"
+path = "/actuator/health"
 interval = "15s"
-restart_limit = 0
 timeout = "2s"
+grace_period = "30s"
+restart_limit = 0
 
 [env]
-SPRING_DATASOURCE_URL="jdbc:postgresql://sao-bot.flycast:5432/SaoBot_Pg_Db?sslmode=disable"
-SPRING_DATASOURCE_USERNAME="postgres"
-SPRING_DATASOURCE_PASSWORD="nx6RQaLhkIrgaxl"
-BOT_TOKEN="8391075439:AAHYZZnl8UYtGVfAbppXmA2OE_M7SMJm3xQ"
-BOT_NAME="sao_telegram_bot"
-SPRING_PROFILES_ACTIVE="prod"
-REDIS_HOST="rediss://default:Aa3FAAIncDI0NTk1OGZiYzU4YmM0YWI1YTNkMzEwYWVmZDllMDcyMnAyNDQ0ODU@careful-stingray-44485.upstash.io:6379"
-REDIS_PORT=6379
-SPRING_DATA_MONGODB_URI="mongodb+srv://scouser:ZB7NJi3liqXy80AP@sao-cluster.20oexbb.mongodb.net/sao_bot_mongo?appName=sao-cluster"
+SPRING_DATASOURCE_URL = "jdbc:postgresql://sao-bot.flycast:5432/SaoBot_Pg_Db?sslmode=disable"
+SPRING_DATASOURCE_USERNAME = "postgres"
+SPRING_DATASOURCE_PASSWORD = "nx6RQaLhkIrgaxl"
+BOT_TOKEN = "8391075439:AAHYZZnl8UYtGVfAbppXmA2OE_M7SMJm3xQ"
+BOT_NAME = "sao_telegram_bot"
+SPRING_PROFILES_ACTIVE = "prod"
+REDIS_HOST = "rediss://default:Aa3FAAIncDI0NTk1OGZiYzU4YmM0YWI1YTNkMzEwYWVmZDllMDcyMnAyNDQ0ODU@careful-stingray-44485.upstash.io:6379"
+REDIS_PORT = 6379
+SPRING_DATA_MONGODB_URI = "mongodb+srv://scouser:ZB7NJi3liqXy80AP@sao-cluster.20oexbb.mongodb.net/sao_bot_mongo?appName=sao-cluster"
 
 [[vm]]
   memory = '1gb'
