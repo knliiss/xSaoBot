@@ -1,24 +1,19 @@
 package dev.knalis.sao_telegram_bot.model.user.settings;
 
+import lombok.Getter;
+
+@Getter
 public enum NotificationCategory {
-    DUNGEON("dungeon"),
-    DROP("drop"),
-    BUSTER("buster"),
-    EVENT("event"),
-    OTHER("other");
+    DUNGEON("🪦Подземелья"),
+    DROP("🎁 Дроп"),
+    BUSTER("💪 Бустеры"),
+    EVENT("✨События"),
+    OTHER("⚙️Прочее");
     
-    private final String name;
+    private final String visualName;
     
-    NotificationCategory(String name) {
-        this.name = name;
+    NotificationCategory(String visualName) {
+        this.visualName = visualName;
     }
     
-    public static NotificationCategory fromString(String category) {
-        for (NotificationCategory notificationCategory : NotificationCategory.values()) {
-            if (notificationCategory.name.equalsIgnoreCase(category)) {
-                return notificationCategory;
-            }
-        }
-        throw new IllegalArgumentException("Invalid category: " + category);
-    }
 }

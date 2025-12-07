@@ -26,19 +26,6 @@ public class IdeaCallBackController extends AbstractCallBackController {
         this.ideaService = ideaService;
     }
     
-    @CallBackMethod("/{page}")
-    public void getMenu(@PathVariable("page") String page, CallBackInfo info) {
-        var chatId = info.getUser().getId();
-        var messageId = info.getMessageId();
-        safeExecute(chatId, () -> {
-            var context = new ComposerContext(chatId);
-            context.put(ContextKey.PAGE, page);
-            context.put(ContextKey.BACK_CALLBACK_URL, "message/menu");
-            var message = menuService.getIdeaMenu(context);
-            editMessage(chatId, messageId, message);
-        }, "❌ Не удалось загрузить идеи. Попробуйте позже.");
-    }
-    
     @CallBackMethod("/delete/{ideaId}/{page}")
     public void delete(@PathVariable("page") String page , @PathVariable("ideaId") String ideaId , CallBackInfo info) {
         var chatId = info.getUser().getId();

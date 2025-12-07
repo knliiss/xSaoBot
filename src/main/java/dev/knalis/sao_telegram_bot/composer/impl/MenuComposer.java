@@ -24,18 +24,8 @@ public class MenuComposer implements BackComposer {
 
     @Override
     public String composeText(ComposerContext context) {
-        return """
-                <b>📋 Главное меню</b>
-                
-                Выберите один из пунктов ниже, чтобы продолжить:
-                - 👤 <b>Аккаунт</b>: Просмотр и управление вашим аккаунтом.
-                - 🛒 <b>Магазин</b>: Покупка дополнительных функций и пакетов сообщений.
-                - 💡 <b>Идеи</b>: Оставить свою идею и проверить статус ранее отправленных.
-                - 👥 <b>Банды</b>: Управление участием в банде.
-                - ⚙️ <b>Настройки</b>: Персонализация параметров.
-                
-                Если возникнут вопросы — пишите @Statleykill
-                """;
+        return "<b>📋 Главное меню</b>\n\nВыберите раздел." +
+                "\nЕсли нужна помощь — напишите администратору или используйте /help.";
     }
 
 
@@ -46,17 +36,17 @@ public class MenuComposer implements BackComposer {
 
         List<List<InlineKeyboardButton>> rows = new ArrayList<>();
         rows.addAll(KeyboardUtil.formCallbackButtons(
-                List.of(Button.builder().callbackData("user/" + chatId).text("👤 Аккаунт").build().toInlineButton()),
-                List.of(Button.builder().callbackData("messagepack/" + 1).text("🛒 Магазин").build().toInlineButton()),
-                List.of(Button.builder().callbackData("idea/" + 1).text("💡 Идеи").build().toInlineButton()),
-                List.of(Button.builder().callbackData("gang").text("👥 Банды").build().toInlineButton()),
-                List.of(Button.builder().callbackData("settings/" + chatId + "/OTHER").text("⚙️ Настройки").build().toInlineButton())
+                List.of(Button.builder().callbackData("menu/" + chatId + "/user").text("👤 Аккаунт").build().toInlineButton()),
+                List.of(Button.builder().callbackData("menu/" + chatId + "/messagepack/1").text("🛒 Магазин").build().toInlineButton()),
+                List.of(Button.builder().callbackData("menu/" + chatId + "/idea/1").text("💡 Идеи").build().toInlineButton()),
+                List.of(Button.builder().callbackData("menu/" + chatId + "/gang").text("👥 Банды").build().toInlineButton()),
+                List.of(Button.builder().callbackData("menu/" + chatId + "/settings/OTHER").text("⚙️ Настройки").build().toInlineButton())
         ));
 
-        if (user != null && user.getRoles() != null && user.getRoles().contains("ADMIN")) {
+        if (user != null && user.getRoles() != null && user.getRoles().stream().anyMatch(r -> r.name().equalsIgnoreCase("ADMIN"))) {
             rows.add(List.of(Button.builder()
-                    .callbackData("idea/1")
-                    .text("🛡️ Админ: идеи")
+                    .callbackData("menu/" + chatId + "/idea/1")
+                    .text("🛡️ Админ — идеи")
                     .build().toInlineButton()));
         }
 

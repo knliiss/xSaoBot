@@ -9,10 +9,12 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.aop.support.AopUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
@@ -33,12 +35,12 @@ public class CallbackRouter {
     @PostConstruct
     public void init() {
         for (Object bean : context.getBeansWithAnnotation(CallBackController.class).values()) {
-            Class<?> clazz = bean.getClass();
-            String base = clazz.getAnnotation(CallBackController.class).value();
+            Class<?> targetClass = AopUtils.getTargetClass(bean);
+            String base = targetClass.getAnnotation(CallBackController.class).value();
 
-            for (Method method : clazz.getDeclaredMethods()) {
-                if (method.isAnnotationPresent(CallBackMethod.class)) {
-                    String path = base + method.getAnnotation(CallBackMethod.class).value();
+            for (Method declared : targetClass.getDeclaredMethods()) {
+                if (declared.isAnnotationPresent(CallBackMethod.class)) {
+                    String path = base + declared.getAnnotation(CallBackMethod.class).value();
 
                     List<String> variables = new ArrayList<>();
                     Matcher m = Pattern.compile("\\{([^/]+)\\}").matcher(path);
@@ -46,7 +48,6 @@ public class CallbackRouter {
                         variables.add(m.group(1));
                     }
                     if (!variables.isEmpty()) {
-                        String lastVar = variables.get(variables.size() - 1);
                         for (int i = 0; i < variables.size() - 1; i++) {
                             if ("page".equals(variables.get(i))) {
                                 throw new IllegalStateException(
@@ -57,10 +58,30 @@ public class CallbackRouter {
                     }
 
                     String regex = path.replaceAll("\\{[^/]+\\}", "([^/]+)");
-                    routes.add(new Route(regex, Pattern.compile(regex), method, bean));
+                    String anchored = "^" + regex + "$";
+                    Pattern pattern = Pattern.compile(anchored);
+
+                    // Resolve invokable method on the bean instance class (handles proxies)
+                    Method invokable = null;
+                    Class<?> beanClass = bean.getClass();
+                    try {
+                        invokable = beanClass.getMethod(declared.getName(), declared.getParameterTypes());
+                    } catch (NoSuchMethodException e) {
+                        for (Method mth : beanClass.getMethods()) {
+                            if (mth.getName().equals(declared.getName()) && mth.getParameterCount() == declared.getParameterCount()) {
+                                invokable = mth;
+                                break;
+                            }
+                        }
+                    }
+                    if (invokable == null) invokable = declared;
+
+                    routes.add(new Route(regex, pattern, declared, invokable, bean));
+                    log.debug("Registered callback route: {} -> {}#{}", anchored, bean.getClass().getSimpleName(), declared.getName());
                 }
             }
         }
+        log.info("CallbackRouter initialized with {} routes", routes.size());
     }
 
     public void dispatch(Update update) {
@@ -87,8 +108,9 @@ public class CallbackRouter {
     }
 
     private void invoke(Route route, Matcher matcher, CallBackInfo info) {
-        Method method = route.method();
-        Parameter[] params = method.getParameters();
+        Method declared = route.declared();
+        Method invokable = route.invokable();
+        Parameter[] params = declared.getParameters();
         Object[] args = new Object[params.length];
         int groupIndex = 1;
 
@@ -116,13 +138,60 @@ public class CallbackRouter {
         }
 
         try {
-            method.setAccessible(true);
-            method.invoke(route.controller(), args);
-        } catch (Exception e) {
-            log.error("Обработчик не нашел нужный метод для сallback: {}", route.regex());
+            invokable.setAccessible(true);
+            invokable.invoke(route.controller(), args);
+            return;
+        } catch (IllegalArgumentException | InvocationTargetException | IllegalAccessException e) {
+            // try to find a compatible method on the controller and invoke it
+            try {
+                Method compatible = findCompatibleMethod(route.controller().getClass(), declared.getName(), args);
+                if (compatible != null) {
+                    compatible.setAccessible(true);
+                    compatible.invoke(route.controller(), args);
+                    return;
+                }
+            } catch (Exception ex) {
+                log.error("Fallback invocation failed", ex);
+            }
+
+            try {
+                String ctrlClass = route.controller().getClass().getName();
+                String mName = declared.getName();
+                StringBuilder argStr = new StringBuilder();
+                for (Object a : args) argStr.append(a).append(",");
+                log.error("Failed to invoke callback handler {}#{} for route {} with args [{}]", ctrlClass, mName, route.regex(), argStr.toString(), e);
+            } catch (Exception ex) {
+                log.error("Failed to invoke callback handler and also failed to log details", e);
+            }
         }
     }
 
-    private record Route(String regex, Pattern pattern, Method method, Object controller) {}
+    private Method findCompatibleMethod(Class<?> cls, String name, Object[] args) {
+        for (Method m : cls.getMethods()) {
+            if (!m.getName().equals(name)) continue;
+            Class<?>[] pts = m.getParameterTypes();
+            if (pts.length != args.length) continue;
+            boolean ok = true;
+            for (int i = 0; i < pts.length; i++) {
+                if (args[i] == null) continue;
+                if (!isAssignable(pts[i], args[i].getClass())) { ok = false; break; }
+            }
+            if (ok) return m;
+        }
+        return null;
+    }
+
+    private boolean isAssignable(Class<?> paramType, Class<?> argClass) {
+        if (paramType.isPrimitive()) {
+            if (paramType == int.class && argClass == Integer.class) return true;
+            if (paramType == long.class && argClass == Long.class) return true;
+            if (paramType == double.class && argClass == Double.class) return true;
+            if (paramType == boolean.class && argClass == Boolean.class) return true;
+            return false;
+        }
+        return paramType.isAssignableFrom(argClass);
+    }
+
+    private record Route(String regex, Pattern pattern, Method declared, Method invokable, Object controller) {}
 
 }

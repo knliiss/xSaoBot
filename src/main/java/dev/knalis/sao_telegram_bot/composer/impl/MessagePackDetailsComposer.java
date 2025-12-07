@@ -4,7 +4,7 @@ import dev.knalis.sao_telegram_bot.composer.ComposerContext;
 import dev.knalis.sao_telegram_bot.composer.ContextKey;
 import dev.knalis.sao_telegram_bot.composer.intrf.BackComposer;
 import dev.knalis.sao_telegram_bot.dto.Button;
-import dev.knalis.sao_telegram_bot.service.MessagePackService;
+import dev.knalis.sao_telegram_bot.service.crud.MessagePackService;
 import dev.knalis.sao_telegram_bot.service.crud.impl.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -28,16 +28,26 @@ public class MessagePackDetailsComposer implements BackComposer {
         long userId = Long.parseLong(context.get(ContextKey.CHAT_ID));
         String packId = context.get("messagePackId");
         var pack = messagePackService.getById(packId);
-        var user = userService.findById(userId);
-        boolean owned = user.getOwnedMessagePacksIds().contains(packId);
-        
+        boolean owned = false;
+        try {
+            owned = messagePackService.isPackOwned(userId, packId);
+        } catch (Exception ignored) {
+        }
 
         StringBuilder sb = new StringBuilder();
-        sb.append("<b>").append(pack.getEmoji() != null ? pack.getEmoji() + " " : "").append(pack.getName()).append("</b>\n\n");
-        sb.append("Стоимость: ").append(pack.getCost()).append(" 💰\n");
-        sb.append("Редкость: ").append(pack.getRarity() != null ? pack.getRarity() : "-").append("\n\n");
-        sb.append("Сообщений: ").append(pack.getMessages() != null ? pack.getMessages().size() : 0).append("\n");
-        if (owned) sb.append("\n✅ У вас уже куплен этот пакет.");
+        sb.append("<b>").append(pack.getEmoji() != null ? pack.getEmoji() + " " : "").append(pack.getName()).append("</b>").append("\n\n");
+        sb.append("📨 Сообщений: ").append(pack.getMessages() != null ? pack.getMessages().size() : 0).append("\n");
+        sb.append("⚖️ Редкость: ").append(pack.getRarity() != null ? pack.getRarity() : "—").append("\n");
+        sb.append("💰 Цена: ").append(pack.getCost()).append("\n");
+        sb.append("Пример сообщений из пака:\n");
+        if (pack.getMessages() != null && !pack.getMessages().isEmpty()) {
+            for (String message : pack.getMessages().values()) {
+                sb.append("• ").append(message).append("\n");
+            }
+        } else {
+            sb.append("—\n");
+        }
+        if (owned) sb.append("\n\n✅ У вас уже куплен этот пакет.");
         return sb.toString();
     }
 
@@ -47,23 +57,28 @@ public class MessagePackDetailsComposer implements BackComposer {
         String packId = context.get("messagePackId");
         String backPage = context.getOrDefault(ContextKey.PAGE.toString(), "1");
         
-        var user = userService.findById(userId);
-        boolean owned = user.getOwnedMessagePacksIds().contains(packId);
-        List<List<InlineKeyboardButton>> rows = new ArrayList<>();
+        boolean owned = false;
+        try { owned = messagePackService.isPackOwned(userId, packId); } catch (Exception ignored) {}
+         List<List<InlineKeyboardButton>> rows = new ArrayList<>();
 
-        if (!owned) {
-            rows.add(List.of(Button.builder()
-                    .text("Купить")
-                    .callbackData("messagepack/" + packId + "/buy/" + backPage)
-                    .build().toInlineButton()));
-        }
+         if (!owned) {
+             rows.add(List.of(Button.builder()
+                     .text("🛒 Купить за " + messagePackService.getById(packId).getCost() + " 💰")
+                     .callbackData("messagepack/" + packId + "/buy/" + backPage)
+                     .build().toInlineButton()));
+         } else {
+             rows.add(List.of(Button.builder()
+                     .text("📦 Открыть пак")
+                     .callbackData("messagepack/" + packId + "/open")
+                     .build().toInlineButton()));
+         }
 
-        rows.add(List.of(Button.builder()
-                .text("⬅️ Назад к списку")
-                .callbackData("messagepack/" + backPage)
-                .build().toInlineButton()));
+         rows.add(List.of(Button.builder()
+                 .text("⬅️ Назад к списку")
+                 .callbackData("menu/" + userId + "/messagepack/" + backPage)
+                 .build().toInlineButton()));
 
-        rows.add(List.of(Button.builder().text("🏠 Меню").callbackData("message/menu").build().toInlineButton()));
-        return rows;
-    }
-}
+         rows.add(List.of(Button.builder().text("🏠 Меню").callbackData("menu/" + userId).build().toInlineButton()));
+         return rows;
+     }
+ }

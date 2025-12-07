@@ -6,7 +6,7 @@ import dev.knalis.sao_telegram_bot.callback.annotation.CallBackController;
 import dev.knalis.sao_telegram_bot.callback.annotation.CallBackMethod;
 import dev.knalis.sao_telegram_bot.callback.annotation.PathVariable;
 import dev.knalis.sao_telegram_bot.composer.ComposerContext;
-import dev.knalis.sao_telegram_bot.service.GangMembershipService;
+import dev.knalis.sao_telegram_bot.service.crud.GangMembershipService;
 import dev.knalis.sao_telegram_bot.service.telegram.ConsumerService;
 import dev.knalis.sao_telegram_bot.service.MenuService;
 import dev.knalis.sao_telegram_bot.service.telegram.TelegramSenderService;
@@ -29,15 +29,6 @@ public class GangCallBackController extends AbstractCallBackController {
         this.gangService = gangService;
         this.consumerService = consumerService;
         this.gangMembershipService = gangMembershipService;
-    }
-
-    @CallBackMethod
-    public void openMenu(CallBackInfo info) {
-        var userId = info.getUser().getId();
-        var messageId = info.getMessageId();
-        var context = new ComposerContext(userId);
-        var message = menuService.getGangMenu(context);
-        editMessage(userId, messageId, message);
     }
     
     @CallBackMethod("/kick/{targetId}")
@@ -83,7 +74,14 @@ public class GangCallBackController extends AbstractCallBackController {
     
     @CallBackMethod("/create")
     public void createGang(CallBackInfo info) {
-        var userId = info.getUser().getId();
+        var user = info.getUser();
+        
+        if (user.getBalance() < GangService.GANG_PRICE) {
+            sendMessage(user.getId(), "⚠️ Недостаточно средств для создания банды. Стоимость: " + GangService.GANG_PRICE + " монет.");
+            return;
+        }
+        
+        var userId = user.getId();
         var messageId = info.getMessageId();
         var context = new ComposerContext(userId);
         int promptId = sendMessage(userId, "✏️ Введите название банды. Для отмены /cancel.");

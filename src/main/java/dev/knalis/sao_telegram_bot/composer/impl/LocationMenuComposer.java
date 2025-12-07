@@ -13,7 +13,7 @@ import java.util.List;
 public class LocationMenuComposer implements BackComposer, ListableComposer<String> {
     @Override
     public String composeText(ComposerContext context) {
-        return "<b>🌍 Локации</b>\n\nВыберите вашу текущую локацию.";
+        return "<b>🌍 Локации</b>\n\nВыберите вашу текущую локацию. Это помогает корректно показывать события и доступные действия.";
     }
 
     @Override
@@ -24,12 +24,22 @@ public class LocationMenuComposer implements BackComposer, ListableComposer<Stri
             locations.add(String.valueOf(i));
         }
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
-        
-        buttons.addAll(buildListOfTypeButtons(locations, 3,
-                loc -> "user/" + chatId + "/location/set/" + loc,
-                loc -> "📍Локация " + loc));
-        
-        buttons.add(generateBackButton(context, "user/" + chatId));
+
+        List<InlineKeyboardButton> row = new ArrayList<>();
+        int cols = 3;
+        int count = 0;
+        for (String loc : locations) {
+            row.add(org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton
+                    .builder().text("📍 " + loc).callbackData("user/" + chatId + "/location/set/" + loc).build());
+            count++;
+            if (count % cols == 0) {
+                buttons.add(row);
+                row = new ArrayList<>();
+            }
+        }
+        if (!row.isEmpty()) buttons.add(row);
+
+        buttons.add(generateBackButton(context, "menu/" + chatId + "/user"));
         return buttons;
     }
 }

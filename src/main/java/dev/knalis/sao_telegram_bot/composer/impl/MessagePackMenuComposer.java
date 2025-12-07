@@ -6,7 +6,7 @@ import dev.knalis.sao_telegram_bot.composer.intrf.ListableComposer;
 import dev.knalis.sao_telegram_bot.composer.intrf.PageComposer;
 import dev.knalis.sao_telegram_bot.dto.Button;
 import dev.knalis.sao_telegram_bot.model.user.settings.MessagePack;
-import dev.knalis.sao_telegram_bot.service.MessagePackService;
+import dev.knalis.sao_telegram_bot.service.crud.MessagePackService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -27,7 +27,7 @@ public class MessagePackMenuComposer implements ListableComposer<MessagePack>, P
         int page = Integer.parseInt(pageStr);
         int total = messagePackService.getAll().size();
         int totalPage = Math.max(1, (int) Math.ceil((double) total / PAGE_SIZE));
-        return "<b>📦 Пакеты сообщений</b>\n\nСтраница: " + page + "/" + totalPage + "\nВыберите пакет, чтобы посмотреть детали и купить.";
+        return "<b>📦 Пакеты сообщений</b>\n\nСтраница: " + page + "/" + totalPage + " — всего пакетов: " + total + "\nВыберите пакет, чтобы посмотреть детали и купить.";
     }
 
     @Override
@@ -42,12 +42,12 @@ public class MessagePackMenuComposer implements ListableComposer<MessagePack>, P
         int to = Math.min(total, from + PAGE_SIZE);
         List<MessagePack> packs = from < to ? all.subList(from, to) : List.of();
 
-        Function<MessagePack, String> callbackMapper = pack -> "messagepack/" + pack.getId() + "/" + page;
-        Function<MessagePack, String> textMapper = pack -> (pack.getEmoji() != null ? pack.getEmoji() + " " : "") + pack.getName();
+        Function<MessagePack, String> callbackMapper = pack -> "menu/" + context.get(ContextKey.CHAT_ID) + "/messagepack/" + pack.getId() + "/" + page;
+        Function<MessagePack, String> textMapper = pack -> (pack.getEmoji() != null ? pack.getEmoji() + " " : "") + pack.getName() + " — " + pack.getCost() + "💰";
 
         List<List<InlineKeyboardButton>> rows = new ArrayList<>(buildListOfTypeButtons(packs, 1, callbackMapper, textMapper));
-        rows.add(generateFooter("messagepack/", page, totalPage));
-        rows.add(List.of(Button.builder().text("🏠 Меню").callbackData("message/menu").build().toInlineButton()));
+        rows.add(generateFooter("menu/" + context.get(ContextKey.CHAT_ID) + "/messagepack/", page, totalPage));
+        rows.add(List.of(Button.builder().text("🏠 Меню").callbackData("menu/" + context.get(ContextKey.CHAT_ID)).build().toInlineButton()));
         return rows;
     }
 }

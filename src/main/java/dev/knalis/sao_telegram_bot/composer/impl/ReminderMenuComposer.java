@@ -5,13 +5,14 @@ import dev.knalis.sao_telegram_bot.composer.ContextKey;
 import dev.knalis.sao_telegram_bot.composer.intrf.ListableComposer;
 import dev.knalis.sao_telegram_bot.composer.intrf.BackComposer;
 import dev.knalis.sao_telegram_bot.model.ScheduledMessage;
-import dev.knalis.sao_telegram_bot.service.ScheduledMessageService;
+import dev.knalis.sao_telegram_bot.service.crud.ScheduledMessageService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import java.util.function.Function;
+import java.util.ArrayList;
 
 @Component
 @RequiredArgsConstructor
@@ -20,18 +21,26 @@ public class ReminderMenuComposer implements ListableComposer<String>, BackCompo
 
     @Override
     public String composeText(ComposerContext context) {
-        return "<b>⏰ Напоминания</b>\n\nВаши активные напоминания.";
+        return "<b>⏰ Напоминания</b>\n\nВаши активные напоминания. Вы можете добавить новое напоминание командой /remind или удалить существующие кнопками списка.";
     }
 
     @Override
     public List<List<InlineKeyboardButton>> composeButtons(ComposerContext context) {
         String chatIdStr = context.get(ContextKey.CHAT_ID);
         Long chatId = Long.valueOf(chatIdStr);
-        List<String> reminders = scheduledMessageService.findDueMessages(chatId).stream().map(ScheduledMessage::getMessage).toList();
+        List<ScheduledMessage> items = scheduledMessageService.findDueMessages(chatId);
+        if (items.isEmpty()) {
+            List<List<InlineKeyboardButton>> rows = new ArrayList<>();
+            rows.add(List.of(org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton
+                    .builder().text("➕ Добавить напоминание").callbackData("menu/" + chatIdStr + "/reminder/add/" + chatIdStr).build()));
+            rows.add(generateBackButton(context, "menu/" + chatIdStr));
+            return rows;
+        }
+
         Function<String, String> callbackMapper = rem -> "noop";
         Function<String, String> textMapper = rem -> rem;
-        List<List<InlineKeyboardButton>> rows = buildListOfTypeButtons(reminders, 1, callbackMapper, textMapper);
-        rows.add(generateBackButton(context, "user/" + chatId));
+        List<List<InlineKeyboardButton>> rows = buildListOfTypeButtons(items.stream().map(ScheduledMessage::getMessage).toList(), 1, callbackMapper, textMapper);
+        rows.add(generateBackButton(context, "menu/" + chatIdStr + "/user"));
         return rows;
     }
 }

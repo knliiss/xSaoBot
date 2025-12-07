@@ -5,12 +5,12 @@ import dev.knalis.sao_telegram_bot.exception.EntityException;
 import dev.knalis.sao_telegram_bot.model.user.User;
 import dev.knalis.sao_telegram_bot.repo.jpa.UserRepo;
 import dev.knalis.sao_telegram_bot.service.crud.intrf.CrudService;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.regex.Pattern;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -18,8 +18,6 @@ public class UserService implements CrudService<User, Long> {
 
     private final UserRepo userRepo;
     private final GangService gangService;
-
-    private static final Pattern NICK_PATTERN = Pattern.compile("^[A-Za-z0-9_]{3,20}$");
 
     @Override
     public JpaRepository getRepo() {
@@ -39,10 +37,8 @@ public class UserService implements CrudService<User, Long> {
         if (userRepo.findByNickname(user.getNickname()).isPresent()) {
             throw new EntityException("User with nickname " + user.getNickname() + " already exists");
         }
-
-        User saved = userRepo.save(user);
-        saved.setConfigId(saved.getSettingsConfigs().get(0).getId());
-        return saved;
+        
+        return userRepo.save(user);
     }
 
     @Transactional
@@ -75,17 +71,12 @@ public class UserService implements CrudService<User, Long> {
 
         userRepo.delete(user);
     }
-
+    
+    
     public boolean existsByNickname(String nickname) {
         return userRepo.findByNickname(nickname).isPresent();
     }
-
-    public boolean isNickNameValid(String nickname) {
-        if (nickname == null) return false;
-        String clean = nickname.startsWith("@") ? nickname.substring(1) : nickname;
-        return NICK_PATTERN.matcher(clean).matches();
-    }
-
+    
     public boolean isAccountNameAvailable(String nickname) {
         String clean = nickname.startsWith("@") ? nickname.substring(1) : nickname;
         return userRepo.findByNickname(clean).isEmpty();
@@ -127,5 +118,22 @@ public class UserService implements CrudService<User, Long> {
             userRepo.save(user);
         }
     }
-
+    
+    @Transactional(readOnly = true)
+    public boolean isAdmin(Long userId) {
+        User user = userRepo.findById(userId).orElse(null);
+        if (user == null) return false;
+        var roles = user.getRoles();
+        if (roles == null) return false;
+        return roles.stream().anyMatch(r -> r.name().equalsIgnoreCase("ADMIN"));
+    }
+    
+    @Override
+    public User findById(Long id) {
+        return userRepo.findById(id).orElse(null);
+    }
+    
+    public List<String> getAdditionalAccountsList(long chatId) {
+        return findById(chatId).getAdditionalAccounts();
+    }
 }

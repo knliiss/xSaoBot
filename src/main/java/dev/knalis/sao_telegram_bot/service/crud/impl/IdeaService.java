@@ -3,7 +3,7 @@ package dev.knalis.sao_telegram_bot.service.crud.impl;
 import dev.knalis.sao_telegram_bot.dto.IdeaCreateRequest;
 import dev.knalis.sao_telegram_bot.model.Idea;
 import dev.knalis.sao_telegram_bot.model.IdeaStatus;
-import dev.knalis.sao_telegram_bot.repo.mongo.IdeaRepo;
+import dev.knalis.sao_telegram_bot.repo.jpa.IdeaRepo;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

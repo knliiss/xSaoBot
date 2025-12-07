@@ -7,19 +7,19 @@ import dev.knalis.sao_telegram_bot.model.user.User;
 import dev.knalis.sao_telegram_bot.repo.jpa.GangRepo;
 import dev.knalis.sao_telegram_bot.repo.jpa.UserRepo;
 
-import dev.knalis.sao_telegram_bot.service.BalanceService;
-import dev.knalis.sao_telegram_bot.service.GangMembershipService;
+import dev.knalis.sao_telegram_bot.service.crud.BalanceService;
+import dev.knalis.sao_telegram_bot.service.crud.GangMembershipService;
 import jakarta.transaction.Transactional;
+import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class GangService {
-
-    private static final Double GANG_PRICE = 1000.0;
+    
+    public static final Double GANG_PRICE = 1000.0;
 
     private final UserRepo userRepo;
     private final GangRepo gangRepo;
@@ -50,37 +50,7 @@ public class GangService {
         userRepo.save(user);
         return gangRepo.save(gang);
     }
-
-    @Transactional
-    public void addMember(Long gangId, Long actorId, Long targetId) {
-        Gang gang = gangRepo.findById(gangId)
-                .orElseThrow(() -> new EntityException.EntityNotFoundException("Gang not found"));
-        User actor = userRepo.findById(actorId)
-                .orElseThrow(() -> new EntityException.EntityNotFoundException("Actor not found"));
-        User target = userRepo.findById(targetId)
-                .orElseThrow(() -> new EntityException.EntityNotFoundException("Target not found"));
-
-        membershipService.addMember(gang, target, actor);
-
-        userRepo.save(target);
-        gangRepo.save(gang);
-    }
-
-    @Transactional
-    public void removeMember(Long gangId, Long actorId, Long targetId) {
-        Gang gang = gangRepo.findById(gangId)
-                .orElseThrow(() -> new EntityException.EntityNotFoundException("Gang not found"));
-        User actor = userRepo.findById(actorId)
-                .orElseThrow(() -> new EntityException.EntityNotFoundException("Actor not found"));
-        User target = userRepo.findById(targetId)
-                .orElseThrow(() -> new EntityException.EntityNotFoundException("Target not found"));
-
-        membershipService.removeMember(gang, target, actor);
-
-        userRepo.save(target);
-        gangRepo.save(gang);
-    }
-
+    
     @Transactional
     public void leaveGang(Long userId) {
         User user = userRepo.findById(userId)
@@ -132,9 +102,12 @@ public class GangService {
                 .orElseThrow(() -> new EntityException.EntityNotFoundException("Gang not found"));
     }
 
+    @Transactional
     public Gang getGangByUserId(Long userId) {
-        return userRepo.findById(userId)
-                .map(User::getGang)
+        User user = userRepo.findById(userId)
+                .orElseThrow(() -> new EntityException.EntityNotFoundException("User not found"));
+        if (user.getGang() == null) return null;
+        return gangRepo.findById(user.getGang().getId())
                 .orElse(null);
     }
 }

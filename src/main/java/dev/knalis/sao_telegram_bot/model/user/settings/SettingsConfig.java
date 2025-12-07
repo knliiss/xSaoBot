@@ -1,5 +1,6 @@
 package dev.knalis.sao_telegram_bot.model.user.settings;
 
+import dev.knalis.sao_telegram_bot.model.user.User;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -12,6 +13,10 @@ public class SettingsConfig {
     private Long id;
 
     private String name;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "settings_id")

@@ -25,7 +25,7 @@ public class ConfigCallBackController extends AbstractCallBackController {
     public void activate(
             @PathVariable("userId") long userId,
             @PathVariable("configId") long configId) {
-        safeExecute(userId, () -> configService.activateConfig(userId, configId), "❌ Не удалось активировать конфиг. Попробуйте позже.");
+        safeExecute(userId, () -> configService.setActiveConfig(userId, configId), "❌ Не удалось активировать конфиг. Попробуйте позже.");
     }
     
     

@@ -28,7 +28,8 @@ public class IdeaMenuComposer implements PageComposer, ListableComposer<Idea>, B
         long userId = Long.parseLong(context.get(ContextKey.CHAT_ID));
         int total = ideaService.getIdeasByAuthorId(userId).size();
         int totalPage = Math.max(1, (int) Math.ceil((double) total / PAGE_SIZE));
-        return "<b>💡 Идеи</b>\n\nСтраница: " + page + "/" + totalPage + "\nВыберите идею, чтобы удалить её.";
+        return "<b>💡 Идеи</b>\n\nСтраница: " + page + "/" + totalPage + " — всего идей: " + total +
+                "\nВыберите идею, чтобы удалить её (только автор может удалять).";
     }
 
     @Override
@@ -45,12 +46,12 @@ public class IdeaMenuComposer implements PageComposer, ListableComposer<Idea>, B
         int to = Math.min(total, from + PAGE_SIZE);
         List<Idea> ideas = from < to ? all.subList(from, to) : List.of();
 
-        Function<Idea, String> callbackMapper = idea -> "idea/delete/" + idea.getId() + "/" + page;
-        Function<Idea, String> textMapper = idea -> "🗑 " + (idea.getContent().length() > 30 ? idea.getContent().substring(0, 30) + "…" : idea.getContent());
+        Function<Idea, String> callbackMapper = idea -> "/idea/delete/" + idea.getId() + "/" + page;
+        Function<Idea, String> textMapper = idea -> "🗑 " + (idea.getContent().length() > 40 ? idea.getContent().substring(0, 40) + "…" : idea.getContent());
         List<List<InlineKeyboardButton>> rows = new ArrayList<>(buildListOfTypeButtons(ideas, 1, callbackMapper, textMapper));
 
-        rows.add(generateFooter("idea/", page, totalPage));
-        rows.add(generateBackButton(context, "message/menu"));
+        rows.add(generateFooter("menu/" + context.get(ContextKey.CHAT_ID) + "/idea/", page, totalPage));
+        rows.add(generateBackButton(context, "menu/" + context.get(ContextKey.CHAT_ID)));
         return rows;
     }
 }

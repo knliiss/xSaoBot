@@ -6,7 +6,6 @@ import dev.knalis.sao_telegram_bot.composer.intrf.BackComposer;
 import dev.knalis.sao_telegram_bot.composer.intrf.PageComposer;
 import dev.knalis.sao_telegram_bot.dto.Button;
 import dev.knalis.sao_telegram_bot.service.crud.impl.UserService;
-import dev.knalis.sao_telegram_bot.model.user.User;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -30,8 +29,7 @@ public class AdditionalAccountsMenuComposer implements PageComposer, BackCompose
     public String composeText(ComposerContext context) {
         long chatId = Long.parseLong(context.get(ContextKey.CHAT_ID));
         int page = Integer.parseInt(context.getOrDefault(ContextKey.PAGE.toString(), "1"));
-        var user = userService.findById(chatId);
-        var list = user.getAdditionalAccounts() == null ? List.<String>of() : user.getAdditionalAccounts();
+        var list = userService.getAdditionalAccountsList(chatId);
 
         int total = list.size();
         int totalPage = Math.max(1, (int) Math.ceil((double) total / PAGE_SIZE));
@@ -42,7 +40,7 @@ public class AdditionalAccountsMenuComposer implements PageComposer, BackCompose
         StringBuilder sb = new StringBuilder();
         sb.append("<b>👥 Дополнительные аккаунты</b>\n\n");
         if (pageItems.isEmpty()) {
-            sb.append("У вас нет дополнительных аккаунтов на этой странице.");
+            sb.append("У вас нет дополнительных аккаунтов. Для привязки используйте соответствующие кнопки ниже.");
         } else {
             sb.append("Страница ").append(page).append("/").append(totalPage).append("\n");
             for (String acc : pageItems) {
@@ -56,8 +54,7 @@ public class AdditionalAccountsMenuComposer implements PageComposer, BackCompose
     public List<List<InlineKeyboardButton>> composeButtons(ComposerContext context) {
         long chatId = Long.parseLong(context.get(ContextKey.CHAT_ID));
         int page = Integer.parseInt(context.getOrDefault(ContextKey.PAGE.toString(), "1"));
-        var user = userService.findById(chatId);
-        var list = user.getAdditionalAccounts() == null ? List.<String>of() : user.getAdditionalAccounts();
+        var list = userService.getAdditionalAccountsList(chatId);
 
         int total = list.size();
         int totalPage = Math.max(1, (int) Math.ceil((double) total / PAGE_SIZE));
@@ -71,31 +68,22 @@ public class AdditionalAccountsMenuComposer implements PageComposer, BackCompose
                 Button.builder().text("🔗 Привязать основной").callbackData("user/" + chatId + "/account/link/main").build().toInlineButton(),
                 Button.builder().text("➕ Привязать доп.").callbackData("user/" + chatId + "/account/link/additional").build().toInlineButton()
         ));
-
-        for (int i = 0; i < pageItems.size(); i += 2) {
-            String a = pageItems.get(i);
-            String b = (i + 1 < pageItems.size()) ? pageItems.get(i + 1) : null;
-
+        
+        for (String acc : pageItems) {
+            String nick = acc.startsWith("@") ? acc : "@" + acc;
+            
             List<InlineKeyboardButton> row = new ArrayList<>();
-            String aNick = a.startsWith("@") ? a : "@" + a;
-            row.add(Button.builder().text(aNick).callbackData("noop").build().toInlineButton());
-            row.add(Button.builder().text("Отвязать").callbackData("user/" + chatId + "/account/unlink/" + sanitize(a) + "/" + page).build().toInlineButton());
-
-            if (b != null) {
-                String bNick = b.startsWith("@") ? b : "@" + b;
-                row.add(Button.builder().text(bNick).callbackData("noop").build().toInlineButton());
-                row.add(Button.builder().text("Отвязать").callbackData("user/" + chatId + "/account/unlink/" + sanitize(b) + "/" + page).build().toInlineButton());
-            }
+            row.add(Button.builder().text(nick).callbackData("noop").build().toInlineButton());
+            row.add(Button.builder().text("Отвязать").callbackData("user/" + chatId + "/account/unlink/" + sanitize(acc) + "/" + page).build().toInlineButton());
+            
             rows.add(row);
-            if (rows.size() >= 1 + ROWS) break; // 1 row already used for link actions
+            if (rows.size() >= 1 + ROWS) break;
         }
 
-        // Footer pagination
-        var footer = generateFooter("user/" + chatId + "/account/", page, totalPage);
+        var footer = generateFooter("menu/" + chatId + "/user/account", page, totalPage);
         if (!footer.isEmpty()) rows.add(footer);
-
-        // Back to user menu
-        rows.add(generateBackButton(context, "user/" + chatId));
+        
+        rows.add(generateBackButton(context, "menu/" + chatId + "/user"));
 
         return rows;
     }

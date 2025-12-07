@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CopilotDiffPersistence">
+    <option name="pendingDiffs">
+      <map>
+        <entry key="$PROJECT_DIR$/docker-compose.full.yml">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/docker-compose.full.yml" />
+              <option name="updatedContent" value="services:&#10;  postgres:&#10;    image: postgres:15&#10;    container_name: sao_postgres&#10;    environment:&#10;      POSTGRES_USER: postgres&#10;      POSTGRES_PASSWORD: postgres&#10;      POSTGRES_DB: sao_db&#10;    volumes:&#10;      - postgres-data:/var/lib/postgresql/data&#10;    ports:&#10;      - &quot;5432:5432&quot;&#10;    healthcheck:&#10;      test: [&quot;CMD-SHELL&quot;, &quot;pg_isready -U postgres -d sao_db&quot;]&#10;      interval: 10s&#10;      timeout: 5s&#10;      retries: 5&#10;&#10;  mongo:&#10;    image: mongo:6.0&#10;    container_name: sao_mongo&#10;    environment:&#10;      MONGO_INITDB_ROOT_USERNAME: mongo&#10;      MONGO_INITDB_ROOT_PASSWORD: mongo&#10;    volumes:&#10;      - mongo-data:/data/db&#10;    ports:&#10;      - &quot;27017:27017&quot;&#10;    healthcheck:&#10;      test: [&quot;CMD&quot;, &quot;mongosh&quot;, &quot;-u&quot;, &quot;mongo&quot;, &quot;-p&quot;, &quot;mongo&quot;, &quot;--authenticationDatabase&quot;, &quot;admin&quot;, &quot;--eval&quot;, &quot;db.adminCommand({ ping: 1 })&quot;, &quot;--quiet&quot;]&#10;      interval: 10s&#10;      timeout: 5s&#10;      retries: 5&#10;&#10;  app:&#10;    build: .&#10;    image: sao-telegram-bot:local&#10;    container_name: sao_app&#10;    depends_on:&#10;      - postgres&#10;      - mongo&#10;    environment:&#10;      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/sao_db&#10;      SPRING_DATASOURCE_USERNAME: postgres&#10;      SPRING_DATASOURCE_PASSWORD: postgres&#10;      SPRING_DATA_MONGODB_URI: mongodb://mongo:mongo@mongo:27017/sao_bot_mongo?authSource=admin&#10;      BOT_TOKEN: ${BOT_TOKEN}&#10;      BOT_NAME: ${BOT_NAME:-sao_telegram_bot}&#10;      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-dev}&#10;      SERVER_PORT: ${SERVER_PORT:-8080}&#10;      MANAGEMENT_PORT: ${MANAGEMENT_PORT:-8080}&#10;    ports:&#10;      - &quot;8080:8080&quot;&#10;    restart: on-failure&#10;    # don't mount source by default; if you want hot-reload during development uncomment below and use bootRun&#10;    # volumes:&#10;    #   - ./:/app&#10;    # command: [&quot;./gradlew&quot;, &quot;bootRun&quot;]&#10;&#10;volumes:&#10;  postgres-data:&#10;  mongo-data:&#10;" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

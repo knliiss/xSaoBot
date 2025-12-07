@@ -32,7 +32,9 @@ public class HelpCommand extends BotCommand {
     public void execute(CommandArgs args) {
         var executor = args.getExecutor();
         var text = composeText(executor.getRoles());
+        var messageId = args.getMessageId();
         sendMessage(executor.getId(), text);
+        deleteMessage(executor.getId(), messageId);
     }
 
     public String composeText(List<Role> roles) {

@@ -16,12 +16,12 @@ public class MenuService {
     MenuComposer menuComposer;
     UserMenuComposer userMenuComposer;
     IdeaMenuComposer ideaMenuComposer;
+    GangMenuComposer gangMenuComposer;
     LocationMenuComposer locationMenuComposer;
     ReminderMenuComposer reminderMenuComposer;
     SettingsMenuComposer settingsMenuComposer;
     MessagePackMenuComposer messagePackMenuComposer;
     MessagePackDetailsComposer messagePackDetailsComposer;
-    GangMenuComposer gangMenuComposer;
     AdditionalAccountsMenuComposer additionalAccountsMenuComposer;
 
     public SendMessage getMenu(ComposerContext context) {

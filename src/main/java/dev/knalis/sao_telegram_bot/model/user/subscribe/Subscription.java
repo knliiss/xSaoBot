@@ -1,5 +1,6 @@
 package dev.knalis.sao_telegram_bot.model.user.subscribe;
 
+import dev.knalis.sao_telegram_bot.model.user.User;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -18,6 +19,10 @@ public class Subscription {
 
     private Instant startDate;
     private Instant endDate;
+    
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     public Subscription() {
         this.plan = PlanType.FREE;

@@ -89,7 +89,6 @@ public class TelegramSenderService {
             }
             return false;
         } catch (TelegramApiException e) {
-            log.error("Failed to edit message", e);
             return false;
         }
     }

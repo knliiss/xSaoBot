@@ -17,7 +17,7 @@ public class Settings {
 
     private String messagePackId;
 
-    @ElementCollection(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.EAGER)
     @MapKeyEnumerated(EnumType.STRING)
     @CollectionTable(name = "settings_notifications", joinColumns = @JoinColumn(name = "settings_id"))
     private Map<NotificationSettings, Boolean> notificationSettings = new HashMap<>();
