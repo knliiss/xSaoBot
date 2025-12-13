@@ -23,7 +23,7 @@ public class CancelCommand extends BotCommand {
     public void execute(CommandArgs commandArgs) {
         long chatId = commandArgs.getExecutor().getId();
         if (consumerService.hasConsumer(chatId)) {
-            consumerService.removeConsumer(chatId);
+            consumerService.removeCurrentConsumer(chatId);
             sendMessage(chatId, "❌ Ожидание отменено.");
         } else {
             sendMessage(chatId, "ℹ️ Нет активного ожидания.");

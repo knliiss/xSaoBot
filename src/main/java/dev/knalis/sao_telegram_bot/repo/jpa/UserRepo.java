@@ -14,5 +14,8 @@ public interface UserRepo extends JpaRepository<User, Long> {
     List<User> findAll();
     
     Optional<User> findSummaryById(@Param("id") Long id);
-
+    
+    Optional<User> findByUsername(String username);
+    
+    List<User> findAllByAdditionalAccountsContainingIgnoreCase(String additionalAccounts);
 }

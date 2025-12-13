@@ -20,6 +20,7 @@ public class MenuService {
     LocationMenuComposer locationMenuComposer;
     ReminderMenuComposer reminderMenuComposer;
     SettingsMenuComposer settingsMenuComposer;
+    IdeaDetailMenuComposer ideaDetailMenuComposer;
     MessagePackMenuComposer messagePackMenuComposer;
     MessagePackDetailsComposer messagePackDetailsComposer;
     AdditionalAccountsMenuComposer additionalAccountsMenuComposer;
@@ -67,5 +68,9 @@ public class MenuService {
     
     public SendMessage getAdditionalAccountsMenu(ComposerContext context) {
         return additionalAccountsMenuComposer.compose(context);
+    }
+    
+    public SendMessage getIdeaDeatilMenu(ComposerContext context) {
+        return ideaDetailMenuComposer.compose(context);
     }
 }

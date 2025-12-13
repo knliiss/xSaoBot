@@ -4,7 +4,8 @@ import dev.knalis.sao_telegram_bot.callback.AbstractCallBackController;
 import dev.knalis.sao_telegram_bot.callback.annotation.CallBackController;
 import dev.knalis.sao_telegram_bot.callback.annotation.CallBackMethod;
 import dev.knalis.sao_telegram_bot.callback.annotation.PathVariable;
-import dev.knalis.sao_telegram_bot.service.crud.impl.ConfigService;
+import dev.knalis.sao_telegram_bot.service.intrf.SettingsConfigService;
+import dev.knalis.sao_telegram_bot.service.intrf.UserService;
 import dev.knalis.sao_telegram_bot.service.telegram.TelegramSenderService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -14,9 +15,9 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ConfigCallBackController extends AbstractCallBackController {
     
-    ConfigService configService;
+    SettingsConfigService configService;
     
-    public ConfigCallBackController(TelegramSenderService senderService, ConfigService configService) {
+    public ConfigCallBackController(TelegramSenderService senderService, SettingsConfigService configService) {
         super(senderService);
         this.configService = configService;
     }
@@ -25,7 +26,9 @@ public class ConfigCallBackController extends AbstractCallBackController {
     public void activate(
             @PathVariable("userId") long userId,
             @PathVariable("configId") long configId) {
-        safeExecute(userId, () -> configService.setActiveConfig(userId, configId), "❌ Не удалось активировать конфиг. Попробуйте позже.");
+        safeExecute(userId, () -> {
+            configService.setActiveConfig(userId, configId);
+        }, "❌ Не удалось активировать конфиг. Попробуйте позже.");
     }
     
     

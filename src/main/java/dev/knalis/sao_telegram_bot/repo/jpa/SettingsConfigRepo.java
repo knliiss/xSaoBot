@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface SettingsConfigRepo extends JpaRepository<SettingsConfig, Long> {
     
-    List<SettingsConfig> findByUserId(Long userId);
+    List<SettingsConfig> findByUser_Id(Long userId);
 }

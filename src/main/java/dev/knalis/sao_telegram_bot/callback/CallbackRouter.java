@@ -3,7 +3,8 @@ package dev.knalis.sao_telegram_bot.callback;
 import dev.knalis.sao_telegram_bot.callback.annotation.CallBackController;
 import dev.knalis.sao_telegram_bot.callback.annotation.CallBackMethod;
 import dev.knalis.sao_telegram_bot.callback.annotation.PathVariable;
-import dev.knalis.sao_telegram_bot.service.crud.impl.UserService;
+import dev.knalis.sao_telegram_bot.dto.entity.UserDTO;
+import dev.knalis.sao_telegram_bot.service.intrf.UserService;
 import jakarta.annotation.PostConstruct;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -61,7 +62,6 @@ public class CallbackRouter {
                     String anchored = "^" + regex + "$";
                     Pattern pattern = Pattern.compile(anchored);
 
-                    // Resolve invokable method on the bean instance class (handles proxies)
                     Method invokable = null;
                     Class<?> beanClass = bean.getClass();
                     try {
@@ -89,9 +89,9 @@ public class CallbackRouter {
         long chatId = update.getCallbackQuery().getMessage().getChatId();
         int messageId = update.getCallbackQuery().getMessage().getMessageId();
         long timeStamp = System.currentTimeMillis();
-        var user = userService.findById(chatId);
+        var userDTO = new UserDTO(userService.findById(chatId).orElseThrow());
         var info = CallBackInfo.builder()
-                .user(user)
+                .user(userDTO)
                 .messageId(messageId)
                 .timestamp(timeStamp)
                 .build();
@@ -124,6 +124,7 @@ public class CallbackRouter {
                 Object converted = switch (type.getSimpleName()) {
                     case "int", "Integer" -> Integer.parseInt(value);
                     case "long", "Long" -> Long.parseLong(value);
+                    case "short", "Short" -> Short.parseShort(value);
                     case "double", "Double" -> Double.parseDouble(value);
                     case "boolean", "Boolean" -> Boolean.parseBoolean(value);
                     default -> value;
@@ -142,7 +143,6 @@ public class CallbackRouter {
             invokable.invoke(route.controller(), args);
             return;
         } catch (IllegalArgumentException | InvocationTargetException | IllegalAccessException e) {
-            // try to find a compatible method on the controller and invoke it
             try {
                 Method compatible = findCompatibleMethod(route.controller().getClass(), declared.getName(), args);
                 if (compatible != null) {
@@ -186,6 +186,7 @@ public class CallbackRouter {
             if (paramType == int.class && argClass == Integer.class) return true;
             if (paramType == long.class && argClass == Long.class) return true;
             if (paramType == double.class && argClass == Double.class) return true;
+            if (paramType == short.class && argClass == Short.class) return true;
             if (paramType == boolean.class && argClass == Boolean.class) return true;
             return false;
         }

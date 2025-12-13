@@ -1,14 +1,14 @@
 package dev.knalis.sao_telegram_bot.callback.impl;
 
-import dev.knalis.sao_telegram_bot.callback.CallBackInfo;
 import dev.knalis.sao_telegram_bot.callback.AbstractCallBackController;
+import dev.knalis.sao_telegram_bot.callback.CallBackInfo;
 import dev.knalis.sao_telegram_bot.callback.annotation.CallBackController;
 import dev.knalis.sao_telegram_bot.callback.annotation.CallBackMethod;
 import dev.knalis.sao_telegram_bot.callback.annotation.PathVariable;
 import dev.knalis.sao_telegram_bot.composer.ComposerContext;
 import dev.knalis.sao_telegram_bot.composer.ContextKey;
 import dev.knalis.sao_telegram_bot.service.MenuService;
-import dev.knalis.sao_telegram_bot.service.crud.MessagePackService;
+import dev.knalis.sao_telegram_bot.service.intrf.MessagePackService;
 import dev.knalis.sao_telegram_bot.service.telegram.TelegramSenderService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -31,7 +31,7 @@ public class MessagePackCallBackController extends AbstractCallBackController {
         var user = callBackInfo.getUser();
         var chatId = user.getId();
         var messageId = callBackInfo.getMessageId();
-        if (user.getBalance() < messagePackService.getMessagePackPrice(messagePackId)) {
+        if (user.getBalance() < messagePackService.getById(messagePackId).getCost()) {
             sendMessage(chatId, "❌ Недостаточно средств для покупки пакета сообщений.");
             return;
         }

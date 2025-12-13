@@ -4,15 +4,14 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import dev.knalis.sao_telegram_bot.model.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
 @Entity
-@Builder
 @AllArgsConstructor
 public class Gang {
 
@@ -21,12 +20,15 @@ public class Gang {
     private Long id;
 
     @OneToOne
+    @Setter
     @JoinColumn(name = "owner_id", nullable = false, unique = true)
     private User owner;
 
+    @Setter
     @Column(nullable = false, unique = true, length = 32)
     private String name;
 
+    @Setter
     private Boolean open;
 
     private int memberLimit;

@@ -38,4 +38,5 @@ public class Subscription {
             case VIP -> this.endDate = this.startDate.plusSeconds(30L * 24 * 60 * 60); // 30 days
         }
     }
+    
 }

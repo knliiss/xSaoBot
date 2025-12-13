@@ -7,9 +7,9 @@ import dev.knalis.sao_telegram_bot.callback.annotation.CallBackMethod;
 import dev.knalis.sao_telegram_bot.callback.annotation.PathVariable;
 import dev.knalis.sao_telegram_bot.composer.ComposerContext;
 import dev.knalis.sao_telegram_bot.composer.ContextKey;
+import dev.knalis.sao_telegram_bot.service.intrf.UserService;
 import dev.knalis.sao_telegram_bot.service.telegram.ConsumerService;
 import dev.knalis.sao_telegram_bot.service.MenuService;
-import dev.knalis.sao_telegram_bot.service.crud.impl.UserService;
 import dev.knalis.sao_telegram_bot.service.telegram.TelegramSenderService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -36,19 +36,14 @@ public class UserCallBackController extends AbstractCallBackController {
 
     @CallBackMethod("/location/set/{locationId}")
     private void setLocation(@PathVariable("chatId") long chatId,
-                             @PathVariable("locationId") int locationId,
+                             @PathVariable("locationId") short locationId,
                              CallBackInfo callBackInfo) {
-        var localeChatId = callBackInfo.getUser().getId();
-        try {
-            userService.setUserLocation(chatId, (short) locationId);
-            sendMessage(localeChatId, "✅ Локация обновлена.");
-        } catch (Exception e) {
-            log.error("Failed to set location {} for user {}: {}", locationId, chatId, e.getMessage(), e);
-            sendMessage(localeChatId, "❌ Не удалось изменить локацию: " + e.getMessage());
-        }
+        safeExecute(chatId, () -> {
+            userService.updateLocationByUserId(chatId, locationId);
         var context = new ComposerContext(String.valueOf(chatId));
         var message = menuService.getUserMenu(context);
-        editMessage(localeChatId, callBackInfo.getMessageId(), message);
+        editMessage(chatId, callBackInfo.getMessageId(), message);
+        }, "❌ Не удалось изменить локацию. Попробуйте позже.");
     }
     
     // ------------ Additional accounts menu ------------
@@ -77,13 +72,7 @@ public class UserCallBackController extends AbstractCallBackController {
         
         Consumer<String> consumer = input -> {
             
-            if (userService.isAccountNameAvailable(input)) {
-                sendMessage(localeChatId, "⚠️ Этот никнейм уже занят. Попробуйте снова.");
-                return;
-            }
-            
-            userService.setUserNickName(chatId, input);
-            sendMessage(localeChatId, "✅ Никнейм успешно изменен на: " + input);
+            userService.updateNickNameByUserId(chatId, input);
             
             var context = new ComposerContext(String.valueOf(chatId));
             var message = menuService.getUserMenu(context);
@@ -102,7 +91,6 @@ public class UserCallBackController extends AbstractCallBackController {
         consumerService.addConsumer(userId, input -> {
             try {
                 userService.linkAdditionalAccount(chatId, input);
-                sendMessage(userId, "✅ Дополнительный аккаунт привязан: @" + (input.startsWith("@") ? input.substring(1) : input));
             } catch (Exception e) {
                 log.error("Failed to link additional account {} for user {}: {}", input, chatId, e.getMessage(), e);
                 sendMessage(userId, "❌ Не удалось привязать доп. аккаунт: " + e.getMessage());
@@ -120,7 +108,6 @@ public class UserCallBackController extends AbstractCallBackController {
         long userId = info.getUser().getId();
         try {
             userService.unlinkAdditionalAccount(chatId, username);
-            sendMessage(userId, "✅ Аккаунт отвязан: @" + username);
         } catch (Exception e) {
             log.error("Failed to unlink additional account {} for user {}: {}", username, chatId, e.getMessage(), e);
             sendMessage(userId, "❌ Не удалось отвязать аккаунт: " + e.getMessage());

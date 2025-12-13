@@ -3,9 +3,9 @@ package dev.knalis.sao_telegram_bot.composer.impl;
 import dev.knalis.sao_telegram_bot.composer.ComposerContext;
 import dev.knalis.sao_telegram_bot.composer.ContextKey;
 import dev.knalis.sao_telegram_bot.composer.intrf.BackComposer;
-import dev.knalis.sao_telegram_bot.dto.Button;
-import dev.knalis.sao_telegram_bot.service.crud.MessagePackService;
-import dev.knalis.sao_telegram_bot.service.crud.impl.UserService;
+import dev.knalis.sao_telegram_bot.dto.telegram.Button;
+import dev.knalis.sao_telegram_bot.service.intrf.UserService;
+import dev.knalis.sao_telegram_bot.service.intrf.MessagePackService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -20,7 +20,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class MessagePackDetailsComposer implements BackComposer {
 
-    MessagePackService messagePackService;
+    private final MessagePackService messagePackService;
     private final UserService userService;
     
     @Override
@@ -30,7 +30,7 @@ public class MessagePackDetailsComposer implements BackComposer {
         var pack = messagePackService.getById(packId);
         boolean owned = false;
         try {
-            owned = messagePackService.isPackOwned(userId, packId);
+            owned = userService.findById(userId).map(u -> u.getOwnedMessagePacksIds() != null && u.getOwnedMessagePacksIds().contains(packId)).orElse(false);
         } catch (Exception ignored) {
         }
 
@@ -58,7 +58,7 @@ public class MessagePackDetailsComposer implements BackComposer {
         String backPage = context.getOrDefault(ContextKey.PAGE.toString(), "1");
         
         boolean owned = false;
-        try { owned = messagePackService.isPackOwned(userId, packId); } catch (Exception ignored) {}
+        try { owned = userService.findById(userId).map(u -> u.getOwnedMessagePacksIds() != null && u.getOwnedMessagePacksIds().contains(packId)).orElse(false); } catch (Exception ignored) {}
          List<List<InlineKeyboardButton>> rows = new ArrayList<>();
 
          if (!owned) {

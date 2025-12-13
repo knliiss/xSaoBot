@@ -1,6 +1,6 @@
 package dev.knalis.sao_telegram_bot.composer.intrf;
 
-import dev.knalis.sao_telegram_bot.dto.Button;
+import dev.knalis.sao_telegram_bot.dto.telegram.Button;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.util.ArrayList;

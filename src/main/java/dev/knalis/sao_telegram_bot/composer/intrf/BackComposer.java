@@ -2,7 +2,7 @@ package dev.knalis.sao_telegram_bot.composer.intrf;
 
 import dev.knalis.sao_telegram_bot.composer.ComposerContext;
 import dev.knalis.sao_telegram_bot.composer.ContextKey;
-import dev.knalis.sao_telegram_bot.dto.Button;
+import dev.knalis.sao_telegram_bot.dto.telegram.Button;
 import dev.knalis.sao_telegram_bot.util.KeyboardUtil;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 

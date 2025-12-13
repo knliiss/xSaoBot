@@ -2,8 +2,9 @@ package dev.knalis.sao_telegram_bot.model;
 
 import dev.knalis.sao_telegram_bot.model.user.User;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import java.time.Instant;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+@Getter
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Idea {
@@ -19,23 +21,24 @@ public class Idea {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     
+    @Setter
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    User user;
+    @JoinColumn(name = "user_id")
+    User author;
     
-    @NotNull
+    @Setter
+    String title;
+    
+    @Setter
     String content;
     
-    @OneToMany(mappedBy = "idea", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    List<IdeaReaction> reactions;
+    @Column(updatable = false, nullable = false)
+    Instant createdAt = Instant.now();
     
-    Instant createdAt;
+    @Setter
+    IdeaStatus status = IdeaStatus.PENDING;
+
+    @OneToMany(mappedBy = "idea", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<IdeaReaction> reactions = new ArrayList<>();
     
-    IdeaStatus status;
-    
-    public Idea() {
-        this.createdAt = Instant.now();
-        this.status = IdeaStatus.PENDING;
-        this.reactions = new ArrayList<>();
-    }
 }

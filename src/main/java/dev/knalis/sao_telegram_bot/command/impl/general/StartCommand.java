@@ -3,7 +3,6 @@ package dev.knalis.sao_telegram_bot.command.impl.general;
 import dev.knalis.sao_telegram_bot.command.BotCommand;
 import dev.knalis.sao_telegram_bot.command.Command;
 import dev.knalis.sao_telegram_bot.command.CommandArgs;
-import dev.knalis.sao_telegram_bot.composer.ComposerContext;
 import dev.knalis.sao_telegram_bot.service.telegram.TelegramSenderService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;

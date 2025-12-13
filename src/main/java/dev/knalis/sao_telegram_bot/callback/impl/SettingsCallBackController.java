@@ -6,9 +6,10 @@ import dev.knalis.sao_telegram_bot.callback.annotation.CallBackController;
 import dev.knalis.sao_telegram_bot.callback.annotation.CallBackMethod;
 import dev.knalis.sao_telegram_bot.callback.annotation.PathVariable;
 import dev.knalis.sao_telegram_bot.model.user.settings.NotificationSettings;
-import dev.knalis.sao_telegram_bot.service.crud.impl.ConfigService;
-import dev.knalis.sao_telegram_bot.service.crud.impl.SettingsService;
+import dev.knalis.sao_telegram_bot.model.user.settings.SettingsConfig;
 import dev.knalis.sao_telegram_bot.service.telegram.TelegramSenderService;
+import dev.knalis.sao_telegram_bot.service.intrf.SettingsConfigService;
+import dev.knalis.sao_telegram_bot.service.intrf.UserService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -18,19 +19,26 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SettingsCallBackController extends AbstractCallBackController {
 
-    SettingsService settingsService;
+    SettingsConfigService settingsService;
+    UserService userService;
     MenuCallBackController menuCallBackController;
 
-    public SettingsCallBackController(TelegramSenderService senderService, SettingsService settingsService, MenuCallBackController menuCallBackController) {
+    public SettingsCallBackController(TelegramSenderService senderService, SettingsConfigService settingsService, UserService userService, MenuCallBackController menuCallBackController) {
         super(senderService);
         this.settingsService = settingsService;
+        this.userService = userService;
         this.menuCallBackController = menuCallBackController;
     }
 
     @CallBackMethod("/update/{category}/all/{state}")
     public void updateAllSettings(@PathVariable("userId") long userId, @PathVariable("category") String category, @PathVariable("state") boolean state, CallBackInfo info) {
         try {
-            settingsService.toggleAllSettings(userId, state);
+            var user = userService.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+            SettingsConfig active = user.getActiveSettingsConfig();
+            if (active == null) {
+                active = settingsService.createDefaultConfig(userId);
+            }
+            settingsService.toggleAllNotificationSettings(userId, active.getId(), state);
             sendMessage(userId, state ? "✅ Все настройки включены." : "✅ Все настройки выключены.");
         } catch (Exception ex) {
             log.error("Failed to update all settings for user {}: {}", userId, ex.getMessage(), ex);
@@ -39,7 +47,7 @@ public class SettingsCallBackController extends AbstractCallBackController {
         menuCallBackController.settingsMenu(userId, category, info);
     }
 
-  @CallBackMethod("/{category}/update/all/{state}")
+    @CallBackMethod("/{category}/update/all/{state}")
     public void updateAllSettingsAlt(@PathVariable("userId") long userId, @PathVariable("category") String category, @PathVariable("state") boolean state, CallBackInfo info) {
         updateAllSettings(userId, category, state, info);
     }
@@ -48,7 +56,16 @@ public class SettingsCallBackController extends AbstractCallBackController {
     public void toggleSetting(@PathVariable("userId") long userId, @PathVariable("category") String category, @PathVariable("type") String type, CallBackInfo info) {
         try {
             NotificationSettings ns = NotificationSettings.valueOf(type.toUpperCase());
-            settingsService.toggleSetting(userId, ns);
+            var userOpt = userService.findById(userId);
+            if (userOpt.isEmpty()) {
+                throw new IllegalArgumentException("User not found");
+            }
+            var user = userOpt.get();
+            var active = user.getActiveSettingsConfig();
+            if (active == null) {
+                active = settingsService.createDefaultConfig(userId);
+            }
+            settingsService.toggleNotificationSetting(userId, active.getId(), ns);
         } catch (IllegalArgumentException ex) {
             log.warn("Unknown notification setting type received: {}", type);
             sendMessage(userId, "⚠️ Неверный тип настройки: " + type);
@@ -59,7 +76,7 @@ public class SettingsCallBackController extends AbstractCallBackController {
         menuCallBackController.settingsMenu(userId, category, info);
     }
 
-   @CallBackMethod("/{category}/update/one/{type}")
+    @CallBackMethod("/{category}/update/one/{type}")
     public void toggleSettingAlt(@PathVariable("userId") long userId, @PathVariable("category") String category, @PathVariable("type") String type, CallBackInfo info) {
         toggleSetting(userId, category, type, info);
     }

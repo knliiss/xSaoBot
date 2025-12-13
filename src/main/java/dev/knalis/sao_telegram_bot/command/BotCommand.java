@@ -1,8 +1,8 @@
 package dev.knalis.sao_telegram_bot.command;
 
 import dev.knalis.sao_telegram_bot.bot.BotHandler;
-import dev.knalis.sao_telegram_bot.dto.AllowRequest;
-import dev.knalis.sao_telegram_bot.dto.AllowResponse;
+import dev.knalis.sao_telegram_bot.dto.command.AllowRequest;
+import dev.knalis.sao_telegram_bot.dto.command.AllowResponse;
 import dev.knalis.sao_telegram_bot.model.user.Role;
 import dev.knalis.sao_telegram_bot.model.user.User;
 import dev.knalis.sao_telegram_bot.service.telegram.TelegramSenderService;

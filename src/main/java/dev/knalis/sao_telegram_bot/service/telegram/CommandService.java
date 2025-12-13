@@ -3,10 +3,12 @@ package dev.knalis.sao_telegram_bot.service.telegram;
 import dev.knalis.sao_telegram_bot.command.BotCommand;
 import dev.knalis.sao_telegram_bot.command.Command;
 import dev.knalis.sao_telegram_bot.command.CommandArgs;
-import dev.knalis.sao_telegram_bot.dto.AllowRequest;
-import dev.knalis.sao_telegram_bot.dto.AllowResponse;
+import dev.knalis.sao_telegram_bot.dto.command.AllowRequest;
+import dev.knalis.sao_telegram_bot.dto.command.AllowResponse;
+import dev.knalis.sao_telegram_bot.dto.entity.UserCreateDTO;
+import dev.knalis.sao_telegram_bot.dto.entity.UserDTO;
 import dev.knalis.sao_telegram_bot.model.user.User;
-import dev.knalis.sao_telegram_bot.service.crud.impl.UserService;
+import dev.knalis.sao_telegram_bot.service.intrf.UserService;
 import jakarta.annotation.PostConstruct;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -51,16 +53,26 @@ public class CommandService {
         if (update == null || !update.hasMessage() || !update.getMessage().hasText()) return;
         long chatId = update.getMessage().getChatId();
         int messageId = update.getMessage().getMessageId();
+        var message = update.getMessage();
+        var from = message.getFrom();
         String text = update.getMessage().getText().trim();
         if (text.isEmpty()) return;
-        
-        var user = userService.findById(chatId);
-        if (user == null) {
-            user = new User(chatId, update.getMessage().getFrom().getUserName());
-            user = userService.create(user);
+
+        var userOptional = userService.findById(chatId);
+        User user;
+        if (userOptional.isEmpty()) {
+            var createDTO= UserCreateDTO.builder()
+                    .id(chatId)
+                    .username(from.getUserName())
+                    .firstName(from.getFirstName())
+                    .lastName(from.getLastName())
+                    .build();
+            user = userService.create(createDTO);
+        } else {
+            user = userOptional.get();
         }
-       
-        
+        var userDTO = new UserDTO(user);
+
         String[] parts = text.split("\\s+");
         String commandText = parts[0].toLowerCase();
         String[] args = parts.length > 1 ? Arrays.copyOfRange(parts, 1, parts.length) : new String[0];
@@ -70,7 +82,7 @@ public class CommandService {
 
         var commandArgs = CommandArgs.builder()
                 .messageId(messageId)
-                .executor(user)
+                .executor(userDTO)
                 .args(args)
                 .build();
 

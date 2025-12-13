@@ -3,8 +3,8 @@ package dev.knalis.sao_telegram_bot.composer.impl;
 import dev.knalis.sao_telegram_bot.composer.ComposerContext;
 import dev.knalis.sao_telegram_bot.composer.ContextKey;
 import dev.knalis.sao_telegram_bot.composer.intrf.BackComposer;
-import dev.knalis.sao_telegram_bot.dto.Button;
-import dev.knalis.sao_telegram_bot.service.crud.impl.UserService;
+import dev.knalis.sao_telegram_bot.dto.telegram.Button;
+import dev.knalis.sao_telegram_bot.service.intrf.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -30,7 +30,7 @@ public class UserMenuComposer implements BackComposer {
     public String composeText(ComposerContext context) {
         String chatIdStr = context.get(ContextKey.CHAT_ID);
             long userId = Long.parseLong(chatIdStr);
-            var user = userService.findById(userId);
+            var user = userService.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
             var created = user.getCreatedAt().atZone(ZoneId.systemDefault()).toLocalDate();
             var nickname = user.getNickname() == null ? "—" : "@" + user.getNickname();
             var gang = user.getGang() == null ? "—" : user.getGang().getName();
@@ -56,7 +56,7 @@ public class UserMenuComposer implements BackComposer {
                     subscription,
                     gang,
                     created.format(DateTimeFormatter.ISO_DATE),
-                    user.getActiveSettingsConfig().getSettings().getMessagePackId()
+                    user.getActiveSettingsConfig() != null ? user.getActiveSettingsConfig().getMessagePackId() : "DEFAULT"
             );
         }
 

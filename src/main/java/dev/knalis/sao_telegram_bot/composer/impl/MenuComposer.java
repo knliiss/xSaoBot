@@ -1,10 +1,10 @@
 package dev.knalis.sao_telegram_bot.composer.impl;
 
+import dev.knalis.sao_telegram_bot.composer.ComposerContext;
 import dev.knalis.sao_telegram_bot.composer.ContextKey;
 import dev.knalis.sao_telegram_bot.composer.intrf.BackComposer;
-import dev.knalis.sao_telegram_bot.composer.ComposerContext;
-import dev.knalis.sao_telegram_bot.dto.Button;
-import dev.knalis.sao_telegram_bot.service.crud.impl.UserService;
+import dev.knalis.sao_telegram_bot.dto.telegram.Button;
+import dev.knalis.sao_telegram_bot.service.intrf.UserService;
 import dev.knalis.sao_telegram_bot.util.KeyboardUtil;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +32,7 @@ public class MenuComposer implements BackComposer {
     @Override
     public List<List<InlineKeyboardButton>> composeButtons(ComposerContext context) {
         var chatId = context.get(ContextKey.CHAT_ID);
-        var user = userService.findById(Long.parseLong(chatId));
+        var user = userService.findById(Long.parseLong(chatId)).orElse(null);
 
         List<List<InlineKeyboardButton>> rows = new ArrayList<>();
         rows.addAll(KeyboardUtil.formCallbackButtons(

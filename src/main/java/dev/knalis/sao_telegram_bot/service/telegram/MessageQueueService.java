@@ -1,6 +1,6 @@
 package dev.knalis.sao_telegram_bot.service.telegram;
 
-import dev.knalis.sao_telegram_bot.dto.MessageRequest;
+import dev.knalis.sao_telegram_bot.dto.telegram.MessageRequest;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 

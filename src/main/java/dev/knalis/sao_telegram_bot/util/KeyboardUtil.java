@@ -1,6 +1,6 @@
 package dev.knalis.sao_telegram_bot.util;
 
-import dev.knalis.sao_telegram_bot.dto.Button;
+import dev.knalis.sao_telegram_bot.dto.telegram.Button;
 import lombok.experimental.UtilityClass;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 

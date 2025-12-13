@@ -6,8 +6,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 @Data
@@ -15,26 +17,42 @@ import java.util.function.Consumer;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ConsumerService {
-
-    Map<Long, Consumer<String>> consumers = new HashMap<>();
-
+    
+    Map<Long, Deque<Consumer<String>>> consumers = new ConcurrentHashMap<>();
+    
     public void addConsumer(long chatId, Consumer<String> consumer) {
-        consumers.put(chatId, consumer);
+        consumers
+                .computeIfAbsent(chatId, id -> new ArrayDeque<>())
+                .addLast(consumer);
     }
-
+    
     public void executeConsumer(long chatId, String input) {
-        if (consumers.containsKey(chatId)) {
-            consumers.get(chatId).accept(input);
+        Deque<Consumer<String>> queue = consumers.get(chatId);
+        if (queue == null || queue.isEmpty()) return;
+        
+        Consumer<String> consumer = queue.pollFirst();
+        consumer.accept(input);
+        
+        if (queue.isEmpty()) {
             consumers.remove(chatId);
         }
     }
-
+    
     public boolean hasConsumer(long chatId) {
         return consumers.containsKey(chatId);
     }
-
-    public void removeConsumer(long chatId) {
+    
+    public void removeCurrentConsumer(long chatId) {
+        Deque<Consumer<String>> queue = consumers.get(chatId);
+        if (queue == null) return;
+        
+        queue.pollFirst();
+        if (queue.isEmpty()) {
+            consumers.remove(chatId);
+        }
+    }
+    
+    public void removeAllConsumers(long chatId) {
         consumers.remove(chatId);
     }
-
 }

@@ -2,99 +2,82 @@ package dev.knalis.sao_telegram_bot.model.user;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import dev.knalis.sao_telegram_bot.model.Gang;
+import dev.knalis.sao_telegram_bot.model.Idea;
 import dev.knalis.sao_telegram_bot.model.IdeaReaction;
 import dev.knalis.sao_telegram_bot.model.user.settings.SettingsConfig;
 import dev.knalis.sao_telegram_bot.model.user.subscribe.Subscription;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.ToString;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
-@ToString(exclude = {"gang", "subscription", "settingsConfigs"})
+@Getter
 @Entity(name = "users")
 public class User {
 
     @Id
+    @Setter
     private long id;
-
+    
+    @Setter
     private String username;
+    
+    @Setter
+    private String firstName;
+    
+    @Setter
+    private String lastName;
 
     @Column
-    private short location;
-
+    @Setter
+    private short location = 0;
+    
+    @Setter
     @Column(unique = true)
     private String nickname;
-
-    private double balance;
     
+    @Setter
+    private double balance = 50;
+    
+    @Setter
     @OneToOne
+    @JoinColumn(name = "active_settings_config_id")
+    private SettingsConfig activeSettingsConfig;
+    
+    @Setter
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Subscription subscription;
+    
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SettingsConfig> settingsConfigs = new ArrayList<>();
 
     @Column(updatable = false, nullable = false)
     private Instant createdAt = Instant.now();
 
     @ElementCollection
-    private List<String> additionalAccounts;
-    
-    @OneToOne
-    private SettingsConfig activeSettingsConfig;
-
-    @OneToMany
-    private List<SettingsConfig> settingsConfigs;
+    private List<String> additionalAccounts = new ArrayList<>();
 
     @ElementCollection
     @CollectionTable(name = "user_owned_packs", joinColumns = @JoinColumn(name = "user_id"))
-    private List<String> ownedMessagePacksIds;
+    private List<String> ownedMessagePacksIds = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Idea> ideas = new ArrayList<>();
 
-    @ElementCollection
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<IdeaReaction> reactions = new ArrayList<>();
+    
+    @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private List<Role> roles;
+    private List<Role> roles = new ArrayList<>();
     
-    @OneToMany
-    private List<IdeaReaction> ideaReactions;
-    
+    @Setter
     @ManyToOne
     @JoinColumn(name = "gang_id")
     @JsonBackReference
     private Gang gang;
-
-    public User() {
-        initDefault();
-    }
-
-    public User(long id, String username) {
-        this.id = id;
-        this.username = username;
-        initDefault();
-    }
     
-    public SettingsConfig getActiveSettingsConfig() {
-        if (activeSettingsConfig == null) {
-            activeSettingsConfig = new SettingsConfig();
-            if (settingsConfigs == null) {
-                settingsConfigs = new ArrayList<>();
-            } else {
-                settingsConfigs.clear();
-            }
-            settingsConfigs.add(activeSettingsConfig);
-        }
-        return activeSettingsConfig;
-    }
-
-    private void initDefault() {
-        this.balance = 50.0;
-        this.location = 0;
-        this.additionalAccounts = new ArrayList<>();
-        this.roles = new ArrayList<>(List.of(Role.USER));
-        this.activeSettingsConfig = new SettingsConfig();
-        this.settingsConfigs = new ArrayList<>(List.of(activeSettingsConfig));
-        this.subscription = new Subscription();
-        this.ideaReactions = new ArrayList<>();
-        this.ownedMessagePacksIds = new ArrayList<>(List.of("default"));
-    }
-
 }

@@ -4,10 +4,10 @@ import dev.knalis.sao_telegram_bot.composer.ComposerContext;
 import dev.knalis.sao_telegram_bot.composer.ContextKey;
 import dev.knalis.sao_telegram_bot.composer.intrf.BackComposer;
 import dev.knalis.sao_telegram_bot.composer.intrf.ListableComposer;
-import dev.knalis.sao_telegram_bot.dto.Button;
+import dev.knalis.sao_telegram_bot.dto.telegram.Button;
 import dev.knalis.sao_telegram_bot.model.user.settings.NotificationCategory;
 import dev.knalis.sao_telegram_bot.model.user.settings.NotificationSettings;
-import dev.knalis.sao_telegram_bot.service.crud.impl.UserService;
+import dev.knalis.sao_telegram_bot.service.intrf.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
@@ -59,12 +59,19 @@ public class SettingsMenuComposer implements ListableComposer<String>, BackCompo
             if (!navRow.isEmpty()) rows.add(navRow);
         }
         
+        var user = userService.findById(chatId).orElse(null);
         if (isOtherCategory) {
             List<InlineKeyboardButton> currentRow = new ArrayList<>();
             for (var key : items) {
                 boolean enabled = false;
                 try {
-                    enabled = userService.findById(chatId).getActiveSettingsConfig().getSettings().isEnabled(key);
+                    if (user != null && user.getActiveSettingsConfig() != null) {
+                        enabled = user.getActiveSettingsConfig().getNotifications().stream()
+                                .filter(n -> n.getType() == key)
+                                .findFirst()
+                                .map(n -> n.isEnabled())
+                                .orElse(false);
+                    }
                 } catch (Exception ignored) {
                 }
                 String stateEmoji = enabled ? "✅" : "❌";
@@ -83,7 +90,7 @@ public class SettingsMenuComposer implements ListableComposer<String>, BackCompo
         } else {
             for (var key : items) {
                 boolean enabled = false;
-                try { enabled = userService.findById(chatId).getActiveSettingsConfig().getSettings().isEnabled(key); } catch (Exception ignored) {}
+                try { if (user != null && user.getActiveSettingsConfig() != null) enabled = user.getActiveSettingsConfig().getNotifications().stream().filter(n -> n.getType() == key).findFirst().map(n -> n.isEnabled()).orElse(false); } catch (Exception ignored) {}
                 String stateEmoji = enabled ? "✅" : "❌";
                 String label = stateEmoji + " " + key.getVisualName();
                 rows.add(List.of(Button.builder()

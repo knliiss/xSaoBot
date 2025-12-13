@@ -5,6 +5,8 @@ import dev.knalis.sao_telegram_bot.model.user.User;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.Instant;
+
 @Entity
 @Data
 public class IdeaReaction {
@@ -13,18 +15,18 @@ public class IdeaReaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idea_id", nullable = false)
     @JsonBackReference(value = "idea-reactions")
     private Idea idea;
     
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    @JsonBackReference(value = "user-idea-reactions")
     private User user;
     
     private ReactionType reactionType;
     
-    private
+    @Column(updatable = false, nullable = false)
+    private Instant createdAt = Instant.now();
     
 }

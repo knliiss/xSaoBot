@@ -4,8 +4,8 @@ import dev.knalis.sao_telegram_bot.composer.ComposerContext;
 import dev.knalis.sao_telegram_bot.composer.ContextKey;
 import dev.knalis.sao_telegram_bot.composer.intrf.BackComposer;
 import dev.knalis.sao_telegram_bot.composer.intrf.PageComposer;
-import dev.knalis.sao_telegram_bot.dto.Button;
-import dev.knalis.sao_telegram_bot.service.crud.impl.UserService;
+import dev.knalis.sao_telegram_bot.dto.telegram.Button;
+import dev.knalis.sao_telegram_bot.service.intrf.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -29,7 +29,7 @@ public class AdditionalAccountsMenuComposer implements PageComposer, BackCompose
     public String composeText(ComposerContext context) {
         long chatId = Long.parseLong(context.get(ContextKey.CHAT_ID));
         int page = Integer.parseInt(context.getOrDefault(ContextKey.PAGE.toString(), "1"));
-        var list = userService.getAdditionalAccountsList(chatId);
+        var list = userService.getAdditionalAccounts(chatId);
 
         int total = list.size();
         int totalPage = Math.max(1, (int) Math.ceil((double) total / PAGE_SIZE));
@@ -54,7 +54,7 @@ public class AdditionalAccountsMenuComposer implements PageComposer, BackCompose
     public List<List<InlineKeyboardButton>> composeButtons(ComposerContext context) {
         long chatId = Long.parseLong(context.get(ContextKey.CHAT_ID));
         int page = Integer.parseInt(context.getOrDefault(ContextKey.PAGE.toString(), "1"));
-        var list = userService.getAdditionalAccountsList(chatId);
+        var list = userService.getAdditionalAccounts(chatId);
 
         int total = list.size();
         int totalPage = Math.max(1, (int) Math.ceil((double) total / PAGE_SIZE));

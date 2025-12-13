@@ -122,12 +122,25 @@ public class MenuCallBackController extends AbstractCallBackController {
             editMessage(info.getUser().getId(), info.getMessageId(), message);
         }, "❌ Не удалось открыть идеи. Попробуйте позже.");
     }
+    
+    @CallBackMethod("/idea/{ideaId}/{backpage}")
+    public void ideaDetailMenu(@PathVariable("userId") long userId, @PathVariable("ideaId") long ideaId, @PathVariable("backPage") int backPage, CallBackInfo info) {
+        safeExecute(info.getUser().getId(), () -> {
+                    var context = new ComposerContext(userId);
+                    context.put(ContextKey.BACK_CALLBACK_URL, "menu/" + userId + "/idea/" + backPage);
+                    context.put(ContextKey.PAGE, Integer.toString(Math.max(1, backPage)));
+                    context.put("ideaId", Long.toString(ideaId));
+                    var message = menuService.getIdeaDeatilMenu(context);
+                    editMessage(info.getUser().getId(), info.getMessageId(), message);
+                },"❌ Не удалось открыть идею. Попробуйте позже.");
+    }
 
     @CallBackMethod("/reminder")
     public void reminderMenu(@PathVariable("userId") long userId, CallBackInfo info) {
         safeExecute(info.getUser().getId(), () -> {
             var context = new ComposerContext(userId);
             var message = menuService.getReminderMenu(context);
+            context.put(ContextKey.BACK_CALLBACK_URL, "menu/" + userId + "/user");
             editMessage(info.getUser().getId(), info.getMessageId(), message);
         }, "❌ Не удалось открыть напоминания. Попробуйте позже.");
     }
