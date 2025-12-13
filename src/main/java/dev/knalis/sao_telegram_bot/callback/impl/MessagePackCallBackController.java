@@ -5,9 +5,7 @@ import dev.knalis.sao_telegram_bot.callback.CallBackInfo;
 import dev.knalis.sao_telegram_bot.callback.annotation.CallBackController;
 import dev.knalis.sao_telegram_bot.callback.annotation.CallBackMethod;
 import dev.knalis.sao_telegram_bot.callback.annotation.PathVariable;
-import dev.knalis.sao_telegram_bot.composer.ComposerContext;
-import dev.knalis.sao_telegram_bot.composer.ContextKey;
-import dev.knalis.sao_telegram_bot.service.MenuService;
+import dev.knalis.sao_telegram_bot.service.ComposerFactory;
 import dev.knalis.sao_telegram_bot.service.intrf.MessagePackService;
 import dev.knalis.sao_telegram_bot.service.telegram.TelegramSenderService;
 import lombok.AccessLevel;
@@ -17,32 +15,30 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class MessagePackCallBackController extends AbstractCallBackController {
     
-    MenuService menuService;
+    ComposerFactory menuService;
     MessagePackService messagePackService;
+    MenuCallBackController menuCallBackController;
     
-    public MessagePackCallBackController(TelegramSenderService senderService, MenuService menuService, MessagePackService messagePackService) {
+    public MessagePackCallBackController(TelegramSenderService senderService, ComposerFactory menuService, MessagePackService messagePackService, MenuCallBackController menuCallBackController) {
         super(senderService);
         this.menuService = menuService;
         this.messagePackService = messagePackService;
+        this.menuCallBackController = menuCallBackController;
     }
     
     @CallBackMethod("/{messagePackId}/buy/{backPage}")
-    private void buyPack(@PathVariable("messagePackId") String messagePackId, @PathVariable("backPage") String backPage, CallBackInfo callBackInfo) {
-        var user = callBackInfo.getUser();
-        var chatId = user.getId();
-        var messageId = callBackInfo.getMessageId();
+    private void buyPack(@PathVariable("messagePackId") String messagePackId, @PathVariable("backPage") String backPage, CallBackInfo info) {
+        var user = info.getUser();
+        var userId = user.getId();
+        var messageId = info.getMessageId();
         if (user.getBalance() < messagePackService.getById(messagePackId).getCost()) {
-            sendMessage(chatId, "❌ Недостаточно средств для покупки пакета сообщений.");
+            sendMessage(userId, "❌ Недостаточно средств для покупки пакета сообщений.");
             return;
         }
-        safeExecute(chatId, () -> {
-            var context = new ComposerContext(chatId);
-            context.put(ContextKey.PAGE, backPage);
-            context.put("messagePackId", messagePackId);
-            context.put(ContextKey.BACK_CALLBACK_URL, "messagepack/" + backPage);
-            messagePackService.buyMessagePack(messagePackId, chatId);
-            var sendMessage = menuService.getMessagePackMenu(context, messagePackId);
-            editMessage(chatId, messageId, sendMessage);
+        safeExecute(userId, () -> {
+            messagePackService.buyMessagePack(messagePackId, userId);
+
+            menuCallBackController.messagePackDetails(userId, messagePackId, backPage, info);
         }, "❌ Не удалось купить пакет сообщений. Проверьте баланс.");
     }
     

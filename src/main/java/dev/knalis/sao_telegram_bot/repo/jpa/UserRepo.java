@@ -13,8 +13,6 @@ public interface UserRepo extends JpaRepository<User, Long> {
     Optional<User> findByNickname(String nickname);
     List<User> findAll();
     
-    Optional<User> findSummaryById(@Param("id") Long id);
-    
     Optional<User> findByUsername(String username);
     
     List<User> findAllByAdditionalAccountsContainingIgnoreCase(String additionalAccounts);

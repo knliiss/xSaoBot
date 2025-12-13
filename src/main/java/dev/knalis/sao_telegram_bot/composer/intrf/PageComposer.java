@@ -1,16 +1,17 @@
 package dev.knalis.sao_telegram_bot.composer.intrf;
 
+import dev.knalis.sao_telegram_bot.context.ComposerContext;
+import dev.knalis.sao_telegram_bot.context.ContextKey;
 import dev.knalis.sao_telegram_bot.dto.telegram.Button;
-import dev.knalis.sao_telegram_bot.util.KeyboardUtil;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import dev.knalis.sao_telegram_bot.dto.telegram.ButtonRow;
+import dev.knalis.sao_telegram_bot.util.PageSlice;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface PageComposer extends Composer {
-
-    default List<InlineKeyboardButton> generateFooter(String callBackUrl, int page, int totalPage) {
-        if (totalPage <= 1) return List.of();
+    
+    default ButtonRow generateFooter(String callBackUrl, int page, int totalPage) {
+        if (totalPage <= 1) return new ButtonRow();
 
         if (!callBackUrl.endsWith("/")) {
             callBackUrl += "/";
@@ -25,23 +26,33 @@ public interface PageComposer extends Composer {
                 .text(page + "/" + totalPage)
                 .callbackData("noop")
                 .build();
-
-        List<Button> buttons = new ArrayList<>();
+        
+        var row = new ButtonRow();
 
         if (page > 1) {
-            buttons.add(Button.builder().text("◀️◀️").callbackData(callBackUrl + prevPage2).build());
-            buttons.add(Button.builder().text("◀️").callbackData(callBackUrl + prevPage).build());
+            row.add(Button.builder().text("◀️◀️").callbackData(callBackUrl + prevPage2).build());
+            row.add(Button.builder().text("◀️").callbackData(callBackUrl + prevPage).build());
         }
-
-        buttons.add(indicator);
+        
+        row.add(indicator);
 
         if (page < totalPage) {
-            buttons.add(Button.builder().text("▶️").callbackData(callBackUrl + nextPage).build());
-            buttons.add(Button.builder().text("▶️▶️").callbackData(callBackUrl + nextPage2).build());
+            row.add(Button.builder().text("▶️").callbackData(callBackUrl + nextPage).build());
+            row.add(Button.builder().text("▶️▶️").callbackData(callBackUrl + nextPage2).build());
         }
-
-        return KeyboardUtil.formCallBackButtonsRow(buttons.toArray(Button[]::new));
+        
+        return row;
     }
-
+    
+    default PageState buildState(ComposerContext context, List list) {
+        int page = context.get(ContextKey.PAGE);
+        long userId = context.get(ContextKey.USER_ID);
+        
+        return new PageState(page, PageSlice.totalPages(list.size(), getPageSize()), PageSlice.slice(list, page, getPageSize()), userId);
+    }
+    
+    record PageState(int page, int totalPages, List items, long userId) { }
+    
+    int getPageSize();
 
 }

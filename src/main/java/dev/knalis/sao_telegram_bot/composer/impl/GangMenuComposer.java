@@ -1,41 +1,39 @@
 package dev.knalis.sao_telegram_bot.composer.impl;
 
-import dev.knalis.sao_telegram_bot.composer.ComposerContext;
-import dev.knalis.sao_telegram_bot.composer.ContextKey;
 import dev.knalis.sao_telegram_bot.composer.intrf.BackComposer;
+import dev.knalis.sao_telegram_bot.context.ComposerContext;
+import dev.knalis.sao_telegram_bot.context.ContextKey;
+import dev.knalis.sao_telegram_bot.context.RequiresContext;
 import dev.knalis.sao_telegram_bot.dto.telegram.Button;
-import dev.knalis.sao_telegram_bot.service.intrf.UserService;
-import lombok.RequiredArgsConstructor;
+import dev.knalis.sao_telegram_bot.dto.telegram.ButtonRow;
+import dev.knalis.sao_telegram_bot.model.Gang;
 import dev.knalis.sao_telegram_bot.service.impl.GangServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+@RequiresContext({ContextKey.GANG, ContextKey.USER_ID, ContextKey.USER})
 public class GangMenuComposer implements BackComposer {
-    private final UserService userService;
     
     @Override
     public String composeText(ComposerContext context) {
         var sb = new StringBuilder();
         sb.append("<b>👥 Банды</b>").append("\n\n");
-        var strChatId = context.get(ContextKey.CHAT_ID);
         try {
-            long userId = Long.parseLong(strChatId);
-            var user = userService.findById(userId).orElse(null);
-            var gang = user != null ? user.getGang() : null;
+            var gang = (Gang) context.get(ContextKey.GANG);
             if (gang == null) {
                 sb.append("Вы не состоите в банде.\nСоздайте банду или попросите приглашение от участника.");
             } else {
-                boolean owner = gang.getOwner() != null && gang.getOwner().getId() == userId;
+                boolean owner = gang.getOwner() != null && gang.getOwner().getId() == (long) context.get(ContextKey.USER_ID);
                 sb.append("Вы состоите в банде: <b>").append(gang.getName()).append("</b>\n");
                 sb.append("Ваша роль: <b>").append(owner ? "Владелец" : "Участник").append("</b>\n\n");
                 sb.append("Участники:\n");
                 gang.getMembers().forEach(member -> {
-                    String name = member.getUsername() != null ? member.getUsername() : "Пользователь " + String.valueOf(member.getId());
+                    String name = member.getUsername() != null ? member.getUsername() : "Пользователь " + member.getId();
                     sb.append("• ").append(name).append("\n");
                 });
             }
@@ -46,16 +44,13 @@ public class GangMenuComposer implements BackComposer {
     }
     
     @Override
-    public List<List<InlineKeyboardButton>> composeButtons(ComposerContext context) {
-        var chatId = context.get(ContextKey.CHAT_ID);
-        List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
+    public List<ButtonRow> composeButtons(ComposerContext context) {
+        List<ButtonRow> buttons = new ArrayList<>();
+        long userId = context.get(ContextKey.USER_ID);
         try {
-            long userId = Long.parseLong(chatId);
-            var user = userService.findById(userId).orElse(null);
-            var gang = user != null ? user.getGang() : null;
+            var gang = (Gang) context.get(ContextKey.GANG);
             if (gang == null) {
-                buttons.add(List.of(
-                        Button.builder().callbackData("gang/create").text("Создать банду — " + GangServiceImpl.GANG_PRICE + " 💰").build().toInlineButton()
+                buttons.add(ButtonRow.of(Button.builder().callbackData("gang/create").text("Создать банду — " + GangServiceImpl.GANG_PRICE + " 💰").build()
                 ));
             } else {
                 boolean owner = gang.getOwner() != null && gang.getOwner().getId() == userId;
@@ -63,22 +58,22 @@ public class GangMenuComposer implements BackComposer {
                     var members = gang.getMembers();
                     for (var member : members) {
                         if (member.getId() != userId) {
-                            buttons.add(List.of(
-                                    Button.builder().callbackData("gang/transfer/" + member.getId()).text("🔁 Передать «" + (member.getUsername() != null ? member.getUsername() : String.valueOf(member.getId())) + "»").build().toInlineButton(),
-                                    Button.builder().callbackData("gang/kick/" + member.getId()).text("🗑 Исключить").build().toInlineButton()
+                            buttons.add(ButtonRow.of(
+                                    Button.builder().callbackData("gang/transfer/" + member.getId()).text("🔁 Передать «" + (member.getUsername() != null ? member.getUsername() : String.valueOf(member.getId())) + "»").build(),
+                                    Button.builder().callbackData("gang/kick/" + member.getId()).text("🗑 Исключить").build()
                             ));
                         }
                     }
                 }
-                buttons.add(List.of(
-                        Button.builder().callbackData("gang/leave").text("🚪 Покинуть банду").build().toInlineButton()
+                buttons.add(ButtonRow.of(
+                        Button.builder().callbackData("gang/leave").text("🚪 Покинуть банду").build()
                 ));
             }
         } catch (Exception e) {
-            buttons.add(List.of(Button.builder().text("⚠️ Ошибка загрузки").callbackData("menu/" + chatId).build().toInlineButton()));
+            buttons.add(ButtonRow.of(Button.builder().text("⚠️ Ошибка загрузки").callbackData("menu/" + userId).build()));
         }
         
-        buttons.add(generateBackButton(context, "menu/" + chatId));
+        buttons.add(generateBackButton("menu/" + userId));
         return buttons;
     }
 }

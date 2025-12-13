@@ -90,8 +90,15 @@ public class UserServiceImpl implements UserService {
     }
     
     @Override
-    public Optional<User> findByUsername(String username) {
-        return userRepo.findByUsername(username);
+    @Transactional(readOnly = true)
+    public SettingsConfig getActiveSettingsConfig(long userId) {
+        var user = userRepo.findById(userId)
+                .orElseThrow(() -> new EntityException("User not found"));
+        var cfg = user.getActiveSettingsConfig();
+        if (cfg != null) {
+            cfg.getNotifications().size();
+        }
+        return cfg;
     }
     
     @Override

@@ -1,16 +1,17 @@
 package dev.knalis.sao_telegram_bot.composer.impl;
 
-import dev.knalis.sao_telegram_bot.composer.ComposerContext;
-import dev.knalis.sao_telegram_bot.composer.ContextKey;
 import dev.knalis.sao_telegram_bot.composer.intrf.BackComposer;
+import dev.knalis.sao_telegram_bot.context.ComposerContext;
+import dev.knalis.sao_telegram_bot.context.ContextKey;
+import dev.knalis.sao_telegram_bot.context.RequiresContext;
 import dev.knalis.sao_telegram_bot.dto.telegram.Button;
-import dev.knalis.sao_telegram_bot.service.intrf.UserService;
-import dev.knalis.sao_telegram_bot.service.intrf.MessagePackService;
+import dev.knalis.sao_telegram_bot.dto.telegram.ButtonRow;
+import dev.knalis.sao_telegram_bot.model.user.User;
+import dev.knalis.sao_telegram_bot.model.user.settings.MessagePack;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,21 +19,14 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiresContext({ContextKey.USER, ContextKey.USER_ID, ContextKey.MESSAGEPACK, ContextKey.BACK_PAGE})
 public class MessagePackDetailsComposer implements BackComposer {
-
-    private final MessagePackService messagePackService;
-    private final UserService userService;
     
     @Override
     public String composeText(ComposerContext context) {
-        long userId = Long.parseLong(context.get(ContextKey.CHAT_ID));
-        String packId = context.get("messagePackId");
-        var pack = messagePackService.getById(packId);
-        boolean owned = false;
-        try {
-            owned = userService.findById(userId).map(u -> u.getOwnedMessagePacksIds() != null && u.getOwnedMessagePacksIds().contains(packId)).orElse(false);
-        } catch (Exception ignored) {
-        }
+        var user = (User) context.get(ContextKey.USER);
+        MessagePack pack = context.get(ContextKey.MESSAGEPACK);
+        boolean owned = user.getOwnedMessagePacksIds().contains(pack.getId());
 
         StringBuilder sb = new StringBuilder();
         sb.append("<b>").append(pack.getEmoji() != null ? pack.getEmoji() + " " : "").append(pack.getName()).append("</b>").append("\n\n");
@@ -52,33 +46,33 @@ public class MessagePackDetailsComposer implements BackComposer {
     }
 
     @Override
-    public List<List<InlineKeyboardButton>> composeButtons(ComposerContext context) {
-        long userId = Long.parseLong(context.get(ContextKey.CHAT_ID));
-        String packId = context.get("messagePackId");
-        String backPage = context.getOrDefault(ContextKey.PAGE.toString(), "1");
-        
-        boolean owned = false;
-        try { owned = userService.findById(userId).map(u -> u.getOwnedMessagePacksIds() != null && u.getOwnedMessagePacksIds().contains(packId)).orElse(false); } catch (Exception ignored) {}
-         List<List<InlineKeyboardButton>> rows = new ArrayList<>();
+    public List<ButtonRow> composeButtons(ComposerContext context) {
+        var user = (User) context.get(ContextKey.USER);
+        var userId = context.get(ContextKey.USER_ID);
+        var backPage = context.get(ContextKey.BACK_PAGE);
+        MessagePack pack = context.get(ContextKey.MESSAGEPACK);
+        var packId = pack.getId();
+        boolean owned = user.getOwnedMessagePacksIds().contains(pack.getId());
+        List<ButtonRow> rows = new ArrayList<>();
 
          if (!owned) {
-             rows.add(List.of(Button.builder()
-                     .text("🛒 Купить за " + messagePackService.getById(packId).getCost() + " 💰")
+             rows.add(ButtonRow.of(Button.builder()
+                     .text("🛒 Купить за " + pack.getCost() + " 💰")
                      .callbackData("messagepack/" + packId + "/buy/" + backPage)
-                     .build().toInlineButton()));
+                     .build()));
          } else {
-             rows.add(List.of(Button.builder()
+             rows.add(ButtonRow.of(Button.builder()
                      .text("📦 Открыть пак")
                      .callbackData("messagepack/" + packId + "/open")
-                     .build().toInlineButton()));
+                     .build()));
          }
 
-         rows.add(List.of(Button.builder()
+         rows.add(ButtonRow.of(Button.builder()
                  .text("⬅️ Назад к списку")
                  .callbackData("menu/" + userId + "/messagepack/" + backPage)
-                 .build().toInlineButton()));
+                 .build()));
 
-         rows.add(List.of(Button.builder().text("🏠 Меню").callbackData("menu/" + userId).build().toInlineButton()));
+         rows.add(ButtonRow.of(Button.builder().text("🏠 Меню").callbackData("menu/" + userId).build()));
          return rows;
      }
  }

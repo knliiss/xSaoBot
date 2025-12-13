@@ -1,26 +1,27 @@
 package dev.knalis.sao_telegram_bot.composer.impl;
 
-import dev.knalis.sao_telegram_bot.composer.ComposerContext;
-import dev.knalis.sao_telegram_bot.composer.ContextKey;
 import dev.knalis.sao_telegram_bot.composer.intrf.BackComposer;
+import dev.knalis.sao_telegram_bot.context.ComposerContext;
+import dev.knalis.sao_telegram_bot.context.ContextKey;
+import dev.knalis.sao_telegram_bot.context.RequiresContext;
 import dev.knalis.sao_telegram_bot.dto.telegram.Button;
-import dev.knalis.sao_telegram_bot.service.intrf.UserService;
-import dev.knalis.sao_telegram_bot.util.KeyboardUtil;
+import dev.knalis.sao_telegram_bot.dto.telegram.ButtonRow;
+import dev.knalis.sao_telegram_bot.model.user.Role;
+import dev.knalis.sao_telegram_bot.model.user.User;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+@RequiresContext({ContextKey.USER_ID, ContextKey.USER})
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class MenuComposer implements BackComposer {
 
-    UserService userService;
 
     @Override
     public String composeText(ComposerContext context) {
@@ -30,27 +31,23 @@ public class MenuComposer implements BackComposer {
 
 
     @Override
-    public List<List<InlineKeyboardButton>> composeButtons(ComposerContext context) {
-        var chatId = context.get(ContextKey.CHAT_ID);
-        var user = userService.findById(Long.parseLong(chatId)).orElse(null);
-
-        List<List<InlineKeyboardButton>> rows = new ArrayList<>();
-        rows.addAll(KeyboardUtil.formCallbackButtons(
-                List.of(Button.builder().callbackData("menu/" + chatId + "/user").text("👤 Аккаунт").build().toInlineButton()),
-                List.of(Button.builder().callbackData("menu/" + chatId + "/messagepack/1").text("🛒 Магазин").build().toInlineButton()),
-                List.of(Button.builder().callbackData("menu/" + chatId + "/idea/1").text("💡 Идеи").build().toInlineButton()),
-                List.of(Button.builder().callbackData("menu/" + chatId + "/gang").text("👥 Банды").build().toInlineButton()),
-                List.of(Button.builder().callbackData("menu/" + chatId + "/settings/OTHER").text("⚙️ Настройки").build().toInlineButton())
-        ));
-
-        if (user != null && user.getRoles() != null && user.getRoles().stream().anyMatch(r -> r.name().equalsIgnoreCase("ADMIN"))) {
-            rows.add(List.of(Button.builder()
-                    .callbackData("menu/" + chatId + "/idea/1")
-                    .text("🛡️ Админ — идеи")
-                    .build().toInlineButton()));
+    public List<ButtonRow> composeButtons(ComposerContext context) {
+        var userId = context.get(ContextKey.USER_ID);
+        var user = (User) context.get(ContextKey.USER);
+        
+        List<ButtonRow> rows = new ArrayList<>();
+        rows.add(ButtonRow.of(Button.builder().callbackData("menu/" + userId + "/user").text("👤 Аккаунт").build()));
+        rows.add(ButtonRow.of(Button.builder().callbackData("menu/" + userId + "/messagepack/1").text("🛒 Магазин").build()));
+        rows.add(ButtonRow.of(Button.builder().callbackData("menu/" + userId + "/idea/1").text("💡 Идеи").build()));
+        rows.add(ButtonRow.of(Button.builder().callbackData("menu/" + userId + "/gang").text("👥 Банды").build()));
+        rows.add(ButtonRow.of(Button.builder().callbackData("menu/" + userId + "/settings/OTHER").text("⚙️ Настройки").build()));
+        
+        
+        if (user.getRoles().contains(Role.ADMIN)) {
+            rows.add(ButtonRow.of(Button.builder().callbackData("menu/" + userId + "/idea/1").text("🛡️ Админ — идеи").build()));
         }
-
-        rows.add(generateBackButton(context, "message/delete"));
+        
+        rows.add(generateBackButton("message/delete"));
         return rows;
     }
 }

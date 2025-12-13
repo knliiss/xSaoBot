@@ -2,6 +2,7 @@ package dev.knalis.sao_telegram_bot.service.intrf;
 
 import dev.knalis.sao_telegram_bot.dto.entity.UserCreateDTO;
 import dev.knalis.sao_telegram_bot.model.user.User;
+import dev.knalis.sao_telegram_bot.model.user.settings.SettingsConfig;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,8 +15,8 @@ public interface UserService {
     void linkAdditionalAccount(long userId, String additionalAccount);
     void unlinkAdditionalAccount(long userId, String additionalAccount);
     List<String> getAdditionalAccounts(long userId);
+    SettingsConfig getActiveSettingsConfig(long userId);
     
-    Optional<User> findByUsername(String username);
     Optional<User> findByNickName(String nickName);
     Optional<User> findById(long id);
     List<User> findAllWithAdditionalAccount(String additionalAccount);

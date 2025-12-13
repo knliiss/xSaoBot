@@ -1,26 +1,25 @@
 package dev.knalis.sao_telegram_bot.composer.impl;
 
-import dev.knalis.sao_telegram_bot.composer.ComposerContext;
-import dev.knalis.sao_telegram_bot.composer.ContextKey;
 import dev.knalis.sao_telegram_bot.composer.intrf.BackComposer;
+import dev.knalis.sao_telegram_bot.context.ComposerContext;
+import dev.knalis.sao_telegram_bot.context.ContextKey;
+import dev.knalis.sao_telegram_bot.context.RequiresContext;
+import dev.knalis.sao_telegram_bot.dto.telegram.Button;
+import dev.knalis.sao_telegram_bot.dto.telegram.ButtonRow;
 import dev.knalis.sao_telegram_bot.model.Idea;
 import dev.knalis.sao_telegram_bot.model.IdeaReaction;
 import dev.knalis.sao_telegram_bot.model.IdeaStatus;
 import dev.knalis.sao_telegram_bot.model.ReactionType;
 import dev.knalis.sao_telegram_bot.model.user.Role;
 import dev.knalis.sao_telegram_bot.model.user.User;
-import dev.knalis.sao_telegram_bot.service.intrf.IdeaReactionService;
-import dev.knalis.sao_telegram_bot.service.intrf.IdeaService;
-import dev.knalis.sao_telegram_bot.service.intrf.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.time.Instant;
-import java.time.ZonedDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,93 +27,86 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@RequiresContext({ContextKey.IDEA, ContextKey.USER, ContextKey.USER_ID, ContextKey.BACK_PAGE, ContextKey.IDEA_REACTIONS})
 public class IdeaDetailMenuComposer implements BackComposer {
-    
-    IdeaService ideaService;
-    UserService userService;
-    private final IdeaReactionService ideaReactionService;
     
     @Override
     public String composeText(ComposerContext context) {
-        var ideaId = context.get("ideaId");
-        var idea = ideaService.findById(Long.parseLong(ideaId)).orElseThrow();
-        if (idea == null) {
-            return "<b>💡 Идея не найдена</b>.";
-        }
-        var chatId = context.get(ContextKey.CHAT_ID);
-        var user = userService.findById(Long.parseLong(chatId)).orElseThrow();
-        return buildIdeaText(idea, user);
+        var user = (User) context.get(ContextKey.USER);
+        var idea = (Idea) context.get(ContextKey.IDEA);
+        List<IdeaReaction> reactions = context.get(ContextKey.IDEA_REACTIONS);
+        return buildIdeaText(idea, user, reactions);
     }
     
     @Override
-    public List<List<InlineKeyboardButton>> composeButtons(ComposerContext context) {
-        var chatId = context.get(ContextKey.CHAT_ID);
-        var buttons = new ArrayList<List<InlineKeyboardButton>>();
-        var user = userService.findById(Long.parseLong(chatId)).orElseThrow();
-        var ideaId = context.get("ideaId");
-        var idea = ideaService.findById(Long.parseLong(ideaId)).orElseThrow();
+    public List<ButtonRow> composeButtons(ComposerContext context) {
+        var buttons = new ArrayList<ButtonRow>();
+        var reactionButtonRow = new ButtonRow();
+        var userId = context.get(ContextKey.USER_ID);
+        var user = (User) context.get(ContextKey.USER);
+        var idea = (Idea) context.get(ContextKey.IDEA);
+        var backPage = context.get(ContextKey.BACK_PAGE);
         
-        List<InlineKeyboardButton> reactionButtons = new ArrayList<>();
-        List<IdeaReaction> reactions = ideaReactionService.findByIdeaId(Long.parseLong(ideaId));
-        reactionButtons.add(InlineKeyboardButton.builder()
+        List<IdeaReaction> reactions = context.get(ContextKey.IDEA_REACTIONS);
+        reactionButtonRow.add(Button.builder()
                 .text("👍 " + reactions.stream().filter(r -> r.getReactionType() == ReactionType.LIKE).count())
                 .callbackData("idea/react/" + idea.getId() + "/" + ReactionType.LIKE)
                 .build());
-        reactionButtons.add(InlineKeyboardButton.builder()
+        reactionButtonRow.add(Button.builder()
                 .text("🗑️")
                 .callbackData("idea/react/" + idea.getId() + "/remove")
                 .build());
-        reactionButtons.add(InlineKeyboardButton.builder()
+        reactionButtonRow.add(Button.builder()
                 .text("👎 " + reactions.stream().filter(r -> r.getReactionType() == ReactionType.DISLIKE).count())
                 .callbackData("idea/react/" + idea.getId() + "/" + ReactionType.DISLIKE)
                 .build());
-        buttons.add(reactionButtons);
+        buttons.add(reactionButtonRow);
         
         boolean isAuthorPending = idea.getAuthor() != null && idea.getAuthor().getId() == user.getId() && idea.getStatus() == IdeaStatus.PENDING;
         if (isAuthorPending || user.getRoles().contains(Role.ADMIN)) {
-            buttons.add(List.of(
-                    InlineKeyboardButton.builder()
+            buttons.add(ButtonRow.of(
+                    Button.builder()
                             .text("🗑 Удалить идею")
-                            .callbackData("idea/delete/" + idea.getId() + "/" + context.get(ContextKey.PAGE))
+                            .callbackData("idea/delete/" + idea.getId() + "/" + backPage)
                             .build()
             ));
         }
         
         if (user.getRoles().contains(Role.ADMIN)) {
-            List<InlineKeyboardButton> adminButtons = new ArrayList<>();
+            var adminButtonRow = new ButtonRow();
             if (idea.getStatus() == IdeaStatus.PENDING) {
-                adminButtons.add(InlineKeyboardButton.builder()
+                adminButtonRow.add(Button.builder()
                         .text("✅ Одобрить")
                         .callbackData("idea/moderate/" + idea.getId() + "/approve")
                         .build());
-                adminButtons.add(InlineKeyboardButton.builder()
+                adminButtonRow.add(Button.builder()
                         .text("❌ Отклонить")
                         .callbackData("idea/moderate/" + idea.getId() + "/reject")
                         .build());
             } else if (idea.getStatus() == IdeaStatus.APPROVED) {
-                adminButtons.add(InlineKeyboardButton.builder()
+                adminButtonRow.add(Button.builder()
                         .text("❌ Отклонить")
                         .callbackData("idea/moderate/" + idea.getId() + "/reject")
                         .build());
-                adminButtons.add(InlineKeyboardButton.builder()
+                adminButtonRow.add(Button.builder()
                         .text("🏁 Завершить")
                         .callbackData("idea/moderate/" + idea.getId() + "/complete")
                         .build());
             } else if (idea.getStatus() == IdeaStatus.REJECTED) {
-                adminButtons.add(InlineKeyboardButton.builder()
+                adminButtonRow.add(Button.builder()
                         .text("✅ Одобрить")
                         .callbackData("idea/moderate/" + idea.getId() + "/approve")
                         .build());
             }
-            buttons.add(adminButtons);
+            buttons.add(adminButtonRow);
         }
         
-        buttons.add(generateBackButton(context, "menu/" + chatId + "/idea"));
+        buttons.add(generateBackButton("menu/" + userId + "/idea/" + backPage));
         return buttons;
     }
     
     
-    private String buildIdeaText(Idea idea, User user) {
+    private String buildIdeaText(Idea idea, User user, List<IdeaReaction> reactions) {
         StringBuilder sb = new StringBuilder();
         sb.append("<b>💡 Идея №").append(idea.getId()).append("</b>\n");
         sb.append(idea.getTitle() != null ? idea.getTitle() : "Без названия").append("\n\n");
@@ -127,7 +119,6 @@ public class IdeaDetailMenuComposer implements BackComposer {
         sb.append("<b>Статус:</b> ").append(idea.getStatus() != null ? idea.getStatus().getVisualName() : "Не задан").append("\n");
         sb.append("<b>Дата создания:</b> ").append(formatDate(idea.getCreatedAt())).append("\n");
         
-        var reactions = ideaReactionService.findByIdeaId(idea.getId());
         var likes = reactions.stream().filter(r -> r.getReactionType() == ReactionType.LIKE).count();
         var dislikes = reactions.size() - likes;
         sb.append("<b>Реакции:</b> 👍 ").append(likes).append(" | 👎 ").append(dislikes).append("\n");

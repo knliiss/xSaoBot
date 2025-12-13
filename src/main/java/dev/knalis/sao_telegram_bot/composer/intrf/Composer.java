@@ -1,38 +1,45 @@
 package dev.knalis.sao_telegram_bot.composer.intrf;
 
-import dev.knalis.sao_telegram_bot.composer.ContextKey;
-import dev.knalis.sao_telegram_bot.composer.ComposerContext;
+import dev.knalis.sao_telegram_bot.context.ComposerContext;
+import dev.knalis.sao_telegram_bot.context.ContextKey;
+import dev.knalis.sao_telegram_bot.dto.telegram.ButtonRow;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.util.List;
 
-public interface Composer {
+import static dev.knalis.sao_telegram_bot.util.TextLayout.formatWithFiller;
 
+public interface Composer {
+    
     default SendMessage compose(ComposerContext context) {
-        String chatId;
+        long chatId;
         try {
-            chatId = context.get(ContextKey.CHAT_ID);
+            chatId = context.get(ContextKey.USER_ID);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Missing CHAT_ID in context");
         }
-
-        List<List<InlineKeyboardButton>> buttons = composeButtons(context);
+        
+        var buttons = composeButtons(context);
         InlineKeyboardMarkup markup = null;
         if (buttons != null && !buttons.isEmpty()) {
-            markup = new InlineKeyboardMarkup(buttons);
+            markup = new InlineKeyboardMarkup(buttons.stream()
+                    .map(ButtonRow::toInlineKeyboardButtons)
+                    .toList());
         }
-
+        
+        String rawText = composeText(context);
+        String text = formatWithFiller(rawText);
+        
         return SendMessage.builder()
                 .chatId(chatId)
-                .text(composeText(context))
+                .text(text)
                 .replyMarkup(markup)
                 .build();
     }
 
     String composeText(ComposerContext context);
 
-    List<List<InlineKeyboardButton>> composeButtons(ComposerContext context);
+    List<ButtonRow> composeButtons(ComposerContext context);
 
 }

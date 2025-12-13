@@ -5,7 +5,6 @@ import dev.knalis.sao_telegram_bot.callback.annotation.CallBackController;
 import dev.knalis.sao_telegram_bot.callback.annotation.CallBackMethod;
 import dev.knalis.sao_telegram_bot.callback.annotation.PathVariable;
 import dev.knalis.sao_telegram_bot.service.intrf.SettingsConfigService;
-import dev.knalis.sao_telegram_bot.service.intrf.UserService;
 import dev.knalis.sao_telegram_bot.service.telegram.TelegramSenderService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;

@@ -1,36 +1,32 @@
 package dev.knalis.sao_telegram_bot.composer.impl;
 
-import dev.knalis.sao_telegram_bot.composer.ComposerContext;
-import dev.knalis.sao_telegram_bot.composer.ContextKey;
 import dev.knalis.sao_telegram_bot.composer.intrf.BackComposer;
+import dev.knalis.sao_telegram_bot.context.ComposerContext;
+import dev.knalis.sao_telegram_bot.context.ContextKey;
+import dev.knalis.sao_telegram_bot.context.RequiresContext;
 import dev.knalis.sao_telegram_bot.dto.telegram.Button;
-import dev.knalis.sao_telegram_bot.service.intrf.UserService;
+import dev.knalis.sao_telegram_bot.dto.telegram.ButtonRow;
+import dev.knalis.sao_telegram_bot.model.user.User;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
-import static dev.knalis.sao_telegram_bot.util.KeyboardUtil.formCallbackButtons;
 
 @Component
 @RequiredArgsConstructor
+@RequiresContext({ContextKey.USER, ContextKey.USER_ID})
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@Slf4j
 public class UserMenuComposer implements BackComposer {
     
-    UserService userService;
-
     @Override
     public String composeText(ComposerContext context) {
-        String chatIdStr = context.get(ContextKey.CHAT_ID);
-            long userId = Long.parseLong(chatIdStr);
-            var user = userService.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        var user = (User) context.get(ContextKey.USER);
             var created = user.getCreatedAt().atZone(ZoneId.systemDefault()).toLocalDate();
             var nickname = user.getNickname() == null ? "—" : "@" + user.getNickname();
             var gang = user.getGang() == null ? "—" : user.getGang().getName();
@@ -59,15 +55,24 @@ public class UserMenuComposer implements BackComposer {
                     user.getActiveSettingsConfig() != null ? user.getActiveSettingsConfig().getMessagePackId() : "DEFAULT"
             );
         }
-
+    
     @Override
-    public List<List<InlineKeyboardButton>> composeButtons(ComposerContext context) {
-        String chatIdStr = context.get(ContextKey.CHAT_ID);
-        return formCallbackButtons(
-                List.of(Button.builder().callbackData("menu/" + chatIdStr + "/user/location").text("📍 Изменить локацию").build().toInlineButton()),
-                List.of(Button.builder().callbackData("menu/" + chatIdStr + "/reminder").text("🔔 Напоминания").build().toInlineButton()),
-                List.of(Button.builder().callbackData("menu/" + chatIdStr + "/user/account").text("⚙️ Управление аккаунтами").build().toInlineButton()),
-                generateBackButton(context, "menu/" + chatIdStr)
-        );
+    public List<ButtonRow> composeButtons(ComposerContext context) {
+        var userId = context.get(ContextKey.USER_ID);
+        
+        var buttons = new ArrayList<ButtonRow>();
+        buttons.add(ButtonRow.of(
+                Button.builder().callbackData("menu/" + userId + "/user/location").text("📍 Изменить локацию").build()
+        ));
+        buttons.add(ButtonRow.of(
+                Button.builder().callbackData("menu/" + userId + "/reminder").text("🔔 Напоминания").build()
+        ));
+        buttons.add(ButtonRow.of(
+                Button.builder().callbackData("menu/" + userId + "/user/account/1").text("⚙️ Управление аккаунтами").build()
+        ));
+        
+        buttons.add(generateBackButton("menu/" + userId));
+        
+        return buttons;
     }
 }

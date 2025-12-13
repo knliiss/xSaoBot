@@ -5,14 +5,11 @@ import dev.knalis.sao_telegram_bot.callback.CallBackInfo;
 import dev.knalis.sao_telegram_bot.callback.annotation.CallBackController;
 import dev.knalis.sao_telegram_bot.callback.annotation.CallBackMethod;
 import dev.knalis.sao_telegram_bot.callback.annotation.PathVariable;
-import dev.knalis.sao_telegram_bot.composer.ComposerContext;
-import dev.knalis.sao_telegram_bot.composer.ContextKey;
 import dev.knalis.sao_telegram_bot.dto.entity.IdeaCreateRequest;
 import dev.knalis.sao_telegram_bot.dto.entity.ReactionRequest;
 import dev.knalis.sao_telegram_bot.model.IdeaStatus;
 import dev.knalis.sao_telegram_bot.model.ReactionType;
 import dev.knalis.sao_telegram_bot.model.user.Role;
-import dev.knalis.sao_telegram_bot.service.MenuService;
 import dev.knalis.sao_telegram_bot.service.intrf.IdeaReactionService;
 import dev.knalis.sao_telegram_bot.service.intrf.IdeaService;
 import dev.knalis.sao_telegram_bot.service.telegram.ConsumerService;
@@ -24,17 +21,17 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class IdeaCallBackController extends AbstractCallBackController {
     
-    MenuService menuService;
     IdeaService ideaService;
     IdeaReactionService ideaReactionService;
     ConsumerService consumerService;
+    MenuCallBackController menuCallBackController;
     
-    public IdeaCallBackController(TelegramSenderService senderService, MenuService menuService, IdeaService ideaService, IdeaReactionService ideaReactionService, ConsumerService consumerService) {
+    public IdeaCallBackController(TelegramSenderService senderService, IdeaService ideaService, IdeaReactionService ideaReactionService, ConsumerService consumerService, MenuCallBackController menuCallBackController) {
         super(senderService);
-        this.menuService = menuService;
         this.ideaService = ideaService;
         this.ideaReactionService = ideaReactionService;
         this.consumerService = consumerService;
+        this.menuCallBackController = menuCallBackController;
     }
     
     @CallBackMethod("/create")
@@ -60,11 +57,10 @@ public class IdeaCallBackController extends AbstractCallBackController {
     }
     
     @CallBackMethod("/delete/{ideaId}/{page}")
-    public void delete(@PathVariable("page") String page , @PathVariable("ideaId") String ideaId , CallBackInfo info) {
+    public void delete(@PathVariable("page") int page, @PathVariable("ideaId") String ideaId, CallBackInfo info) {
         var chatId = info.getUser().getId();
-        var messageId = info.getMessageId();
         
-        if (ideaService.canDelete(Long.parseLong(ideaId), chatId)) {
+        if (!ideaService.canDelete(Long.parseLong(ideaId), chatId)) {
             sendMessage(chatId, "❌ У вас нет прав для выполнения этого действия.");
             return;
         }
@@ -72,11 +68,7 @@ public class IdeaCallBackController extends AbstractCallBackController {
         safeExecute(chatId, () -> {
             long id = Long.parseLong(ideaId);
             ideaService.delete(id);
-            var context = new ComposerContext(chatId);
-            context.put(ContextKey.PAGE, page);
-            context.put(ContextKey.BACK_CALLBACK_URL, "message/menu");
-            var message = menuService.getIdeaMenu(context);
-            editMessage(chatId, messageId, message);
+            menuCallBackController.ideaMenu(chatId, page, info);
         }, "❌ Не удалось удалить идею. Попробуйте позже.");
     }
     

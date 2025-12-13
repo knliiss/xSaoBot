@@ -1,105 +1,72 @@
 package dev.knalis.sao_telegram_bot.composer.impl;
 
-import dev.knalis.sao_telegram_bot.composer.ComposerContext;
-import dev.knalis.sao_telegram_bot.composer.ContextKey;
 import dev.knalis.sao_telegram_bot.composer.intrf.BackComposer;
 import dev.knalis.sao_telegram_bot.composer.intrf.ListableComposer;
 import dev.knalis.sao_telegram_bot.composer.intrf.PageComposer;
+import dev.knalis.sao_telegram_bot.context.ComposerContext;
+import dev.knalis.sao_telegram_bot.context.ContextKey;
+import dev.knalis.sao_telegram_bot.context.RequiresContext;
 import dev.knalis.sao_telegram_bot.dto.telegram.Button;
+import dev.knalis.sao_telegram_bot.dto.telegram.ButtonRow;
 import dev.knalis.sao_telegram_bot.model.Idea;
 import dev.knalis.sao_telegram_bot.model.IdeaStatus;
-import dev.knalis.sao_telegram_bot.service.intrf.IdeaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
+@RequiresContext({ContextKey.IDEAS, ContextKey.USER_ID, ContextKey.PAGE})
 public class IdeaMenuComposer implements PageComposer, ListableComposer<Idea>, BackComposer {
-    
-    private final IdeaService ideaService;
     
     private static final int PAGE_SIZE = 5;
     
     @Override
     public String composeText(ComposerContext context) {
-        int page = Integer.parseInt(context.getOrDefault(ContextKey.PAGE.toString(), "1"));
-        long userId = Long.parseLong(context.get(ContextKey.CHAT_ID));
-        
-        List<Idea> userIdeas = ideaService.findAll().stream()
-                .filter(i -> i.getAuthor() != null && i.getAuthor().getId() == userId)
-                .toList();
-        
-        int total = userIdeas.size();
-        int totalPages = Math.max(1, (int) Math.ceil((double) total / PAGE_SIZE));
+        var items = (List<Idea>) context.get(ContextKey.IDEAS);
+        var state = buildState(context, items);
+        var userId = context.get(ContextKey.USER_ID);
+        int userIdeaCount = (int) items.stream().filter(idea -> idea.getAuthor().getId() == (long) userId).count();
         
         return """
                 <b>💡 Предложенные идеи</b>
                 
                 Страница: %d / %d
                 Всего идей: <b>%d</b>
+                Ваших идей: <b>%d</b>
                 
                 ⏳ — на рассмотрении
                 ✅ — одобрено
                 ❌ — отклонено
                 ⭐ — реализовано
-                """.formatted(page, totalPages, total);
+                """.formatted(state.page(), state.totalPages(), items.size(), userIdeaCount);
     }
     
     @Override
-    public List<List<InlineKeyboardButton>> composeButtons(ComposerContext context) {
-        int page = Integer.parseInt(context.getOrDefault(ContextKey.PAGE.toString(), "1"));
-        long userId = Long.parseLong(context.get(ContextKey.CHAT_ID));
-        
-        List<Idea> all = ideaService.findAll().stream()
-                .filter(i -> i.getAuthor() != null && i.getAuthor().getId() == userId)
-                .collect(Collectors.toList());
-        
-        sortIdeasByStatus(all);
-        
-        int total = all.size();
-        int totalPages = Math.max(1, (int) Math.ceil((double) total / PAGE_SIZE));
-        
-        int from = Math.max(0, (page - 1) * PAGE_SIZE);
-        int to = Math.min(total, from + PAGE_SIZE);
-        List<Idea> ideas = from < to ? all.subList(from, to) : List.of();
-        
-        Function<Idea, String> callbackMapper =
-                idea -> "menu/" + userId + "/idea/" + idea.getId() + "/" + page;
-        
-        Function<Idea, String> textMapper = idea -> {
-            String title = idea.getTitle();
-            if (title.length() > 32) {
-                title = title.substring(0, 32) + "…";
-            }
-            return getStatusEmoji(idea.getStatus()) + " " + title;
-        };
-        
-        
-        List<List<InlineKeyboardButton>> rows = new ArrayList<>();
-        rows.add(Collections.singletonList(
+    public List<ButtonRow> composeButtons(ComposerContext context) {
+        var items = (List<Idea>) context.get(ContextKey.IDEAS);
+        sortIdeasByStatus(items);
+        var state = buildState(context, items);
+  
+        List<ButtonRow> rows = new ArrayList<>();
+        rows.add(ButtonRow.of(
                 Button.builder()
                         .text("💡 Предложить идею")
                         .callbackData("idea/create")
                         .build()
-                        .toInlineButton()
         ));
         
-        rows.addAll(buildListOfTypeButtons(ideas, 1, callbackMapper, textMapper));
+        rows.addAll(buildListOfTypeButtons(items, 1, context));
         
         rows.add(generateFooter(
-                "menu/" + context.get(ContextKey.CHAT_ID) + "/idea/",
-                page,
-                totalPages
+                "menu/" + context.get(ContextKey.USER_ID) + "/idea/",
+                state.page(),
+                state.totalPages()
         ));
         
-        rows.add(generateBackButton(context, "menu/" + context.get(ContextKey.CHAT_ID)));
+        rows.add(generateBackButton("menu/" + context.get(ContextKey.USER_ID)));
         
         return rows;
     }
@@ -128,5 +95,21 @@ public class IdeaMenuComposer implements PageComposer, ListableComposer<Idea>, B
             case REJECTED -> "❌";
             case COMPLETED -> "⭐";
         };
+    }
+    
+    @Override
+    public Button buildItemButton(Idea item, int index, ComposerContext context) {
+        String statusEmoji = getStatusEmoji(item.getStatus());
+        String text = "%d. %s %s".formatted(index, statusEmoji, item.getTitle());
+        String callbackData = "menu/" + context.get(ContextKey.USER_ID) + "/idea/" + item.getId() + "/" + context.get(ContextKey.PAGE);
+        return Button.builder()
+                .text(text)
+                .callbackData(callbackData)
+                .build();
+    }
+    
+    @Override
+    public int getPageSize() {
+        return PAGE_SIZE;
     }
 }

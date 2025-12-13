@@ -7,9 +7,9 @@ import dev.knalis.sao_telegram_bot.callback.annotation.CallBackMethod;
 import dev.knalis.sao_telegram_bot.callback.annotation.PathVariable;
 import dev.knalis.sao_telegram_bot.model.user.settings.NotificationSettings;
 import dev.knalis.sao_telegram_bot.model.user.settings.SettingsConfig;
-import dev.knalis.sao_telegram_bot.service.telegram.TelegramSenderService;
 import dev.knalis.sao_telegram_bot.service.intrf.SettingsConfigService;
 import dev.knalis.sao_telegram_bot.service.intrf.UserService;
+import dev.knalis.sao_telegram_bot.service.telegram.TelegramSenderService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +39,6 @@ public class SettingsCallBackController extends AbstractCallBackController {
                 active = settingsService.createDefaultConfig(userId);
             }
             settingsService.toggleAllNotificationSettings(userId, active.getId(), state);
-            sendMessage(userId, state ? "✅ Все настройки включены." : "✅ Все настройки выключены.");
         } catch (Exception ex) {
             log.error("Failed to update all settings for user {}: {}", userId, ex.getMessage(), ex);
             sendMessage(userId, "❌ Не удалось обновить настройки: " + ex.getMessage());

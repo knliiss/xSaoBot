@@ -60,7 +60,7 @@ public class User {
     @ElementCollection
     private List<String> additionalAccounts = new ArrayList<>();
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "user_owned_packs", joinColumns = @JoinColumn(name = "user_id"))
     private List<String> ownedMessagePacksIds = new ArrayList<>();
     
