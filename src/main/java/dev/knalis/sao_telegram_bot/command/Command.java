@@ -16,6 +16,7 @@ public @interface Command {
     String description() default "";
     String[] aliases() default {};
     Role[] allowedRoles() default {Role.USER};
+    boolean visible() default true;
     int minArgs() default 0;
     int maxArgs() default Integer.MAX_VALUE;
 }

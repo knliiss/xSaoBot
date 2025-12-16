@@ -14,7 +14,7 @@ public abstract class BotCommand extends BotHandler {
     public BotCommand(TelegramSenderService senderService) {
         super(senderService);
     }
-
+    
     public abstract void execute(CommandArgs commandArgs);
 
     Command getCommandAnnotation() {
@@ -115,6 +115,14 @@ public abstract class BotCommand extends BotHandler {
             return cmdAnnotation.value();
         }
         return "";
+    }
+    
+    public boolean isVisible() {
+        Command cmdAnnotation = getCommandAnnotation();
+        if (cmdAnnotation != null) {
+            return cmdAnnotation.visible();
+        }
+        return true;
     }
 
 }

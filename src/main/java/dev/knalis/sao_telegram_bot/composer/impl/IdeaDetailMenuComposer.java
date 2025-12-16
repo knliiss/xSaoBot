@@ -108,16 +108,16 @@ public class IdeaDetailMenuComposer implements BackComposer {
     
     private String buildIdeaText(Idea idea, User user, List<IdeaReaction> reactions) {
         StringBuilder sb = new StringBuilder();
-        sb.append("<b>💡 Идея №").append(idea.getId()).append("</b>\n");
+        sb.append("<b>💡 Идея \n\uD83C\uDD94 ID:").append(idea.getId()).append("</b>");
         sb.append(idea.getTitle() != null ? idea.getTitle() : "Без названия").append("\n\n");
-        sb.append("<i>Автор: ").append(idea.getAuthor() != null ? idea.getAuthor().getUsername() : "Неизвестен").append("</i>").append("\n\n");
+        sb.append("<i>👤Автор: ").append(idea.getAuthor().getNickname() != null ? idea.getAuthor().getNickname() : "Неизвестен").append("</i>").append("\n\n");
         if (user.getRoles().contains(Role.ADMIN)) {
-            sb.append(" (ID: ").append(idea.getAuthor() != null ? idea.getAuthor().getId() : "N/A").append(")").append("\n\n");
+            sb.append(" (Юз автора: @").append(idea.getAuthor() != null ? idea.getAuthor().getUsername() + " (" + idea.getAuthor().getId() : "N/A").append(")").append("\n\n");
         }
         
-        sb.append("<b>Идея:</b> ").append(idea.getContent() != null ? idea.getContent() : "(описание отсутствует)").append("\n\n");
-        sb.append("<b>Статус:</b> ").append(idea.getStatus() != null ? idea.getStatus().getVisualName() : "Не задан").append("\n");
-        sb.append("<b>Дата создания:</b> ").append(formatDate(idea.getCreatedAt())).append("\n");
+        sb.append("<b>📝Описание:</b> ").append(idea.getContent() != null ? idea.getContent() : "(описание отсутствует)").append("\n\n");
+        sb.append("<b>📌Статус:</b> ").append(idea.getStatus() != null ? idea.getStatus().getVisualName() : "Не задан").append("\n");
+        sb.append("<b>🕓Дата создания:</b> ").append(formatDate(idea.getCreatedAt())).append("\n");
         
         var likes = reactions.stream().filter(r -> r.getReactionType() == ReactionType.LIKE).count();
         var dislikes = reactions.size() - likes;

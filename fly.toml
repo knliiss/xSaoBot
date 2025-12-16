@@ -14,19 +14,10 @@ auto_start_machines = true
 min_machines_running = 1
 processes = ['app']
 
-[[http_service.checks]]
-# use Spring Boot actuator health endpoint for reliable health checks
-type = "http"
-path = "/actuator/health"
-interval = "15s"
-timeout = "2s"
-grace_period = "30s"
-restart_limit = 0
-
 [env]
-SPRING_DATASOURCE_URL = "jdbc:postgresql://sao-bot.internal:5432/SaoBot_Pg_Db?sslmode=disable"
-SPRING_DATASOURCE_USERNAME = "postgres"
-SPRING_DATASOURCE_PASSWORD = "nx6RQaLhkIrgaxl"
+SPRING_DATASOURCE_URL = "jdbc:postgresql://ep-little-violet-agad4e1a-pooler.c-2.eu-central-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+SPRING_DATASOURCE_USERNAME = "neondb_owner"
+SPRING_DATASOURCE_PASSWORD = "npg_Qj3cpNevIr8x"
 BOT_TOKEN = "8391075439:AAHYZZnl8UYtGVfAbppXmA2OE_M7SMJm3xQ"
 BOT_NAME = "sao_telegram_bot"
 SPRING_PROFILES_ACTIVE = "prod"

@@ -102,6 +102,32 @@ public class UserServiceImpl implements UserService {
     }
     
     @Override
+    public List<Role> getUserRoles(long userId) {
+        var user = userRepo.findById(userId).orElseThrow(() -> new EntityException("User not found"));
+        return user.getRoles().stream().toList();
+    }
+    
+    @Override
+    @Transactional
+    public void addRoleToUser(long userId, Role role) {
+        var user = userRepo.findById(userId).orElseThrow(() -> new EntityException("User not found"));
+        if (!user.getRoles().contains(role)) {
+            user.getRoles().add(role);
+            userRepo.save(user);
+        }
+    }
+    
+    @Override
+    @Transactional
+    public void removeRoleFromUser(long userId, Role role) {
+        var user = userRepo.findById(userId).orElseThrow(() -> new EntityException("User not found"));
+        if (user.getRoles().contains(role)) {
+            user.getRoles().remove(role);
+            userRepo.save(user);
+        }
+    }
+    
+    @Override
     public Optional<User> findByNickName(String nickName) {
         return userRepo.findByNickname(nickName);
     }
@@ -147,6 +173,13 @@ public class UserServiceImpl implements UserService {
         var user = userRepo.findById(userId).orElseThrow(() -> new EntityException("User not found"));
         var balance = user.getBalance();
         user.setBalance(balance + amount);
+        userRepo.save(user);
+    }
+    
+    @Override
+    public void setBalance(long userId, double amount) {
+        var user = userRepo.findById(userId).orElseThrow(() -> new EntityException("User not found"));
+        user.setBalance(amount);
         userRepo.save(user);
     }
 }

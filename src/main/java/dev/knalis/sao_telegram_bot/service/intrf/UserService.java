@@ -1,6 +1,7 @@
 package dev.knalis.sao_telegram_bot.service.intrf;
 
 import dev.knalis.sao_telegram_bot.dto.entity.UserCreateDTO;
+import dev.knalis.sao_telegram_bot.model.user.Role;
 import dev.knalis.sao_telegram_bot.model.user.User;
 import dev.knalis.sao_telegram_bot.model.user.settings.SettingsConfig;
 
@@ -17,6 +18,10 @@ public interface UserService {
     List<String> getAdditionalAccounts(long userId);
     SettingsConfig getActiveSettingsConfig(long userId);
     
+    List<Role> getUserRoles(long userId);
+    void addRoleToUser(long userId, Role role);
+    void removeRoleFromUser(long userId, Role role);
+    
     Optional<User> findByNickName(String nickName);
     Optional<User> findById(long id);
     List<User> findAllWithAdditionalAccount(String additionalAccount);
@@ -27,6 +32,6 @@ public interface UserService {
     
     void withdrawBalance(long userId, double amount);
     void addBalance(long userId, double amount);
-    
+    void setBalance(long userId, double amount);
     
 }

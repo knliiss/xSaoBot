@@ -6,6 +6,8 @@ import dev.knalis.sao_telegram_bot.command.CommandArgs;
 import dev.knalis.sao_telegram_bot.model.user.Role;
 import dev.knalis.sao_telegram_bot.service.telegram.CommandService;
 import dev.knalis.sao_telegram_bot.service.telegram.TelegramSenderService;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.springframework.context.annotation.Lazy;
 
 import java.util.Arrays;
@@ -16,12 +18,12 @@ import java.util.stream.Collectors;
         value = "/help",
         description = "Получить справочник по командам",
         aliases = {"/h", "/?"},
-        minArgs = 0,
         maxArgs = 0
 )
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class HelpCommand extends BotCommand {
 
-    private final CommandService commandService;
+    CommandService commandService;
 
     public HelpCommand(TelegramSenderService senderService, @Lazy CommandService commandService) {
         super(senderService);
@@ -48,7 +50,7 @@ public class HelpCommand extends BotCommand {
             if (command.getAllowedRoles() != null && command.getAllowedRoles().length > 0) {
                 boolean hasAccess = Arrays.stream(command.getAllowedRoles())
                         .anyMatch(roles::contains);
-                if (!hasAccess) continue;
+                if (!hasAccess || !command.isVisible()) continue;
             }
 
             builder.append("<b>")

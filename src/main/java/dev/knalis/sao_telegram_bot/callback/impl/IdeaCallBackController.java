@@ -105,7 +105,7 @@ public class IdeaCallBackController extends AbstractCallBackController {
         }
         
         safeExecute(chatId, () -> {
-            ideaService.updateStatus(ideaId, IdeaStatus.valueOf(action));
+            ideaService.updateStatus(ideaId, IdeaStatus.valueOf(action.toUpperCase()));
             var message = "✅ Действие выполнено!\n\n" +
                     "Перезапустите просмотр идеи, чтобы увидеть обновленный статус.";
             sendMessage(chatId, message);
