@@ -9,7 +9,9 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@Command(value = "/cancel", description = "Отменить ожидание аргумента", maxArgs = 0)
+@Command(name = "cancel",
+        aliases = {"cancel"}
+)
 public class CancelCommand extends BotCommand {
 
     ConsumerService consumerService;
@@ -28,5 +30,15 @@ public class CancelCommand extends BotCommand {
         } else {
             sendMessage(chatId, "ℹ️ Нет активного ожидания.");
         }
+    }
+    
+    @Override
+    public String getUsage() {
+        return "/" + getAliases()[0];
+    }
+    
+    @Override
+    public String getDescription() {
+        return "Отменить ожидание ввода";
     }
 }

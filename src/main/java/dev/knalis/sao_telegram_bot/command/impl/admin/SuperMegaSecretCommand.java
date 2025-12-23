@@ -9,7 +9,11 @@ import dev.knalis.sao_telegram_bot.service.telegram.TelegramSenderService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 
-@Command(visible = false, value = "/secret", maxArgs = 0)
+@Command(
+        name = "Secret",
+        aliases = {"secret"},
+        visible = false
+)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class SuperMegaSecretCommand extends BotCommand {
     
@@ -37,5 +41,15 @@ public class SuperMegaSecretCommand extends BotCommand {
         }
         
     
+    }
+    
+    @Override
+    public String getUsage() {
+        return "/" + getAliases()[0];
+    }
+    
+    @Override
+    public String getDescription() {
+        return "Секретная команда";
     }
 }

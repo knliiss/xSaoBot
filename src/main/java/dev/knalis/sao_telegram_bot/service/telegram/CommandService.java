@@ -41,10 +41,10 @@ public class CommandService {
                 .filter(cmd -> cmd.getClass().getAnnotation(Command.class) != null)
                 .forEach(cmd -> {
                     Command cmdAnnotation = cmd.getClass().getAnnotation(Command.class);
-                    botCommands.put(cmdAnnotation.value().toLowerCase(), cmd);
+                    botCommands.put(cmdAnnotation.name(), cmd);
                     for (String alias : cmdAnnotation.aliases()) {
-                        botCommands.put(alias.toLowerCase(), cmd);
-                        log.info("Added alias: {}", alias);
+                        botCommands.put( "/" + alias.toLowerCase(), cmd);
+                        log.info("Added alias: /{}", alias);
                     }
                 });
     }

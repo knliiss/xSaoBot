@@ -21,27 +21,8 @@ public abstract class BotCommand extends BotHandler {
         return this.getClass().getAnnotation(Command.class);
     }
 
-    public String getUsage() {
-        Command cmdAnnotation = getCommandAnnotation();
-        if (cmdAnnotation != null) {
-            StringBuilder usage = new StringBuilder("/" + cmdAnnotation.value());
-
-            for (int i = 0; i < cmdAnnotation.minArgs(); i++) {
-                usage.append(" <arg").append(i + 1).append(">");
-            }
-
-            if (cmdAnnotation.maxArgs() == Integer.MAX_VALUE) {
-                usage.append(" [arg").append(cmdAnnotation.minArgs() + 1).append(" ...]");
-            } else {
-                for (int i = cmdAnnotation.minArgs(); i < cmdAnnotation.maxArgs(); i++) {
-                    usage.append(" [arg").append(i + 1).append("]");
-                }
-            }
-
-            return usage.toString();
-        }
-        return "";
-    }
+    public abstract String getUsage();
+    public abstract String getDescription();
 
     public AllowResponse isUserAllowed(AllowRequest allowRequest) {
         AllowResponse allowResponse = new AllowResponse();
@@ -101,18 +82,10 @@ public abstract class BotCommand extends BotHandler {
         return new String[]{};
     }
 
-    public  String getDescription() {
+    public String getName() {
         Command cmdAnnotation = getCommandAnnotation();
         if (cmdAnnotation != null) {
-            return cmdAnnotation.description();
-        }
-        return "";
-    }
-
-    public String getValue() {
-        Command cmdAnnotation = getCommandAnnotation();
-        if (cmdAnnotation != null) {
-            return cmdAnnotation.value();
+            return cmdAnnotation.name();
         }
         return "";
     }

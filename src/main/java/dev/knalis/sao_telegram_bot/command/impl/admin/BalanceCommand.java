@@ -7,11 +7,10 @@ import dev.knalis.sao_telegram_bot.model.user.Role;
 import dev.knalis.sao_telegram_bot.service.intrf.UserService;
 import dev.knalis.sao_telegram_bot.service.telegram.TelegramSenderService;
 
-@Command(value = "/balance",
+@Command(name = "Balance",
         minArgs = 3,
         maxArgs = 3,
-        description = "Управление балансами пользователей (админ команда).",
-        aliases = {"/bal"},
+        aliases = {"balance", "bal"},
         allowedRoles = {Role.ADMIN, Role.DEVELOPER, Role.OWNER}
 )
 public class BalanceCommand extends BotCommand {
@@ -55,5 +54,15 @@ public class BalanceCommand extends BotCommand {
         
         deleteMessage(executor.getId(), messageId);
         sendMessage(executor.getId(), "✅ Баланс пользователя " + userId + " успешно обновлен.");
+    }
+    
+    @Override
+    public String getUsage() {
+        return "/" + getAliases()[0] + "<userId> <add|withdraw|set> <amount>";
+    }
+    
+    @Override
+    public String getDescription() {
+        return "Управление балансом пользователя";
     }
 }
