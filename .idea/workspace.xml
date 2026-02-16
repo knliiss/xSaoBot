@@ -4,149 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0c87b74f-bc4d-44a3-bd79-33a29679470a" name="Changes" comment="add reaction handling and user settings management; refactor services and update Docker configuration">
-      <change afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/composer/impl/IdeaDetailMenuComposer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/dto/entity/GangActionRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/dto/entity/GangActionType.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/dto/entity/GangCreateDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/dto/entity/GangDeleteDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/dto/entity/IdeaCreateRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/dto/entity/ReactionRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/dto/entity/UserCreateDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/dto/entity/UserDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/model/user/settings/SettingsNotification.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/repo/jpa/IdeaReactionRepo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/repo/jpa/SettingsNotificationRepo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/service/impl/GangServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/service/impl/IdeaReactionServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/service/impl/IdeaServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/service/impl/PlayerDropServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/service/impl/SettingsConfigServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/service/impl/SubscriptionServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/service/impl/UserServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/service/intrf/GangService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/service/intrf/IdeaReactionService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/service/intrf/IdeaService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/service/intrf/MessagePackService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/service/intrf/PlayerDropService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/service/intrf/SettingsConfigService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/service/intrf/SubscriptionService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/service/intrf/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.14.3/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.14.3/checksums/checksums.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.14.3/checksums/sha1-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.14.3/checksums/sha1-checksums.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.14.3/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.14.3/executionHistory/executionHistory.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.14.3/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.14.3/executionHistory/executionHistory.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.14.3/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.14.3/fileHashes/fileHashes.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.14.3/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.14.3/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.14.3/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.14.3/fileHashes/resourceHashesCache.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
+    <list default="true" id="0c87b74f-bc4d-44a3-bd79-33a29679470a" name="Changes" comment="feat: implement event model, repository, and service for event management">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/composer/ContextKey.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/composer/ContextKey.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/composer/impl/AdditionalAccountsMenuComposer.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/composer/impl/AdditionalAccountsMenuComposer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/composer/impl/GangMenuComposer.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/composer/impl/GangMenuComposer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/composer/intrf/BackComposer.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/composer/intrf/BackComposer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/composer/intrf/PageComposer.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/composer/intrf/PageComposer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/dto/AllowRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/dto/AllowResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/dto/Button$ButtonBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/dto/Button.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/dto/IdeaCreateRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/dto/MessageRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/dto/ScheduledMessageUpdateRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/dto/SettingsDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/dto/UserUpdateRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/exception/EntityException$EntityNotFoundException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/exception/EntityException.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/exception/EntityException.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/model/Gang$GangBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/model/Gang.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/model/Gang.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/model/Idea.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/model/Idea.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/model/IdeaStatus.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/model/IdeaStatus.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/model/user/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/model/user/User.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/model/user/settings/Settings.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/model/user/settings/SettingsConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/model/user/settings/SettingsConfig.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/model/user/subscribe/Subscription$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/model/user/subscribe/Subscription$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/model/user/subscribe/Subscription.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/model/user/subscribe/Subscription.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/repo/jpa/GangRepo.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/repo/jpa/GangRepo.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/repo/jpa/UserRepo.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/repo/jpa/UserRepo.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/service/crud/impl/GangService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/service/crud/impl/UserService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/service/crud/intrf/CrudService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/util/KeyboardUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/dev/knalis/sao_telegram_bot/util/KeyboardUtil.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/problems/problems-report.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/problems/problems-report.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/restart-app.sh" beforeDir="false" afterPath="$PROJECT_DIR$/restart-app.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/callback/CallBackInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/callback/CallBackInfo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/callback/CallbackRouter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/callback/CallbackRouter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/callback/impl/ConfigCallBackController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/callback/impl/ConfigCallBackController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/callback/impl/GangCallBackController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/callback/impl/GangCallBackController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/callback/impl/IdeaCallBackController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/callback/impl/IdeaCallBackController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/callback/impl/MenuCallBackController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/callback/impl/MenuCallBackController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/callback/impl/MessagePackCallBackController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/callback/impl/MessagePackCallBackController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/callback/impl/SettingsCallBackController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/callback/impl/SettingsCallBackController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/callback/impl/UserCallBackController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/callback/impl/UserCallBackController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/command/BotCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/command/BotCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/command/CommandArgs.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/command/CommandArgs.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/command/impl/general/StartCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/command/impl/general/StartCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/composer/ContextKey.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/composer/ContextKey.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/composer/impl/AdditionalAccountsMenuComposer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/composer/impl/AdditionalAccountsMenuComposer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/composer/impl/GangMenuComposer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/composer/impl/GangMenuComposer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/composer/impl/IdeaMenuComposer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/composer/impl/IdeaMenuComposer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/composer/impl/MenuComposer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/composer/impl/MenuComposer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/composer/impl/MessagePackDetailsComposer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/composer/impl/MessagePackDetailsComposer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/composer/impl/MessagePackMenuComposer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/composer/impl/MessagePackMenuComposer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/composer/impl/ReminderMenuComposer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/composer/impl/ReminderMenuComposer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/composer/impl/SettingsMenuComposer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/composer/impl/SettingsMenuComposer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/composer/impl/UserMenuComposer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/composer/impl/UserMenuComposer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/composer/intrf/BackComposer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/composer/intrf/BackComposer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/composer/intrf/ListableComposer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/composer/intrf/ListableComposer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/composer/intrf/PageComposer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/composer/intrf/PageComposer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/dto/AllowRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/dto/command/AllowRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/dto/AllowResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/dto/command/AllowResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/dto/Button.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/dto/telegram/Button.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/dto/IdeaCreateRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/dto/MessageRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/dto/telegram/MessageRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/dto/ScheduledMessageUpdateRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/dto/SettingsDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/dto/UserUpdateRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/exception/BalanceException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/exception/EntityException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/exception/EntityException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/exception/GangException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/exception/UserException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/model/Gang.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/model/Gang.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/model/Idea.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/model/Idea.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/model/IdeaReaction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/model/IdeaReaction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/model/IdeaStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/model/IdeaStatus.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/model/PlayerDrops.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/model/drop/PlayerDrops.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/model/user/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/model/user/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/model/user/settings/MessagePack.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/model/user/settings/MessagePack.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/model/user/settings/Settings.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/model/user/settings/SettingsConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/model/user/settings/SettingsConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/model/user/subscribe/Subscription.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/model/user/subscribe/Subscription.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/repo/jpa/GangRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/repo/jpa/GangRepo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/repo/jpa/SettingsConfigRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/repo/jpa/SettingsConfigRepo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/repo/jpa/UserRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/repo/jpa/UserRepo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/repo/mongo/PlayerDropRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/repo/mongo/PlayerDropRepo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/service/MenuService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/service/MenuService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/service/crud/BalanceService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/service/crud/GangMembershipService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/service/crud/MessagePackService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/service/impl/MessagePackServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/service/crud/PlayerDropService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/service/crud/ScheduledMessageService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/service/crud/impl/ConfigService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/service/crud/impl/GangService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/service/crud/impl/IdeaService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/service/crud/impl/SettingsService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/service/crud/impl/UserService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/service/crud/intrf/CrudService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/service/telegram/CommandService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/service/telegram/CommandService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/service/telegram/MessageQueueService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/service/telegram/MessageQueueService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/service/telegram/MessageWorker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/service/telegram/MessageWorker.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/util/KeyboardUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/knalis/sao_telegram_bot/util/KeyboardUtil.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CopilotPersistence">
+    <persistenceIdMap>
+      <entry key="_/Users/knalis/dev/java/sao_telegram_bot" value="33c2uMzRbgHqufRqfJyeAWqw9NM" />
+    </persistenceIdMap>
   </component>
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
@@ -188,8 +57,9 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Exception" />
-        <option value="AnnotationType" />
         <option value="Dockerfile" />
+        <option value="AnnotationType" />
+        <option value="Spring Component" />
         <option value="Enum" />
         <option value="Interface" />
         <option value="Class" />
@@ -197,6 +67,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="feat/commands" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -205,12 +80,22 @@
     &quot;assignee&quot;: &quot;knliiss&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/knliiss/xSaoBot.git&quot;,
-    &quot;accountId&quot;: &quot;476a8ad0-c782-44ef-8ba1-a91d38e74431&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/knliiss/xSaoBot.git",
+    "accountId": "476a8ad0-c782-44ef-8ba1-a91d38e74431"
+  },
+  "recentNewPullRequestHead": {
+    "server": {
+      "useHttp": false,
+      "host": "github.com",
+      "port": null,
+      "suffix": null
+    },
+    "owner": "knliiss",
+    "repository": "xSaoBot"
   }
-}</component>
+}]]></component>
   <component name="KubernetesApiPersistence">{}</component>
   <component name="KubernetesApiProvider">{
   &quot;isMigrated&quot;: true
@@ -235,7 +120,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feat/Events&quot;,
     &quot;last_opened_file_path&quot;: &quot;/Users/knalis/dev/java/sao_telegram_bot/src/main/java/dev/knalis/sao_telegram_bot&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -442,6 +327,14 @@
       <workItem from="1764939188851" duration="28111000" />
       <workItem from="1765177075747" duration="24996000" />
       <workItem from="1765586563360" duration="3369000" />
+      <workItem from="1765592603269" duration="37252000" />
+      <workItem from="1765884754449" duration="9618000" />
+      <workItem from="1766143875787" duration="603000" />
+      <workItem from="1766447141175" duration="1000" />
+      <workItem from="1766448381295" duration="2332000" />
+      <workItem from="1768596138025" duration="1000" />
+      <workItem from="1768672751526" duration="13000" />
+      <workItem from="1771091833455" duration="1536000" />
     </task>
     <task id="LOCAL-00001" summary="Refactor package structure, add DTOs, and enhance bot functionality&#10;&#10;- Moved classes to new package structure for better organization.&#10;- Introduced new DTO classes: ConfigDTO, Drop, PlayerDrops, SettingsDTO, UserCreateRequest, ScheduledMessage, GangMemberDTO, SubscriptionDTO, MessagePackDTO, and UserDTO.&#10;- Updated existing classes to utilize new DTOs.&#10;- Enhanced Dockerfile for improved deployment.&#10;- Added Redis configuration and message queue service for better message handling.&#10;- Implemented user callback controller for managing user interactions.">
       <option name="closed" value="true" />
@@ -667,7 +560,47 @@
       <option name="project" value="LOCAL" />
       <updated>1765145955127</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="refactor: reorganize DTO packages, add new entity classes, and update repository methods">
+      <option name="closed" value="true" />
+      <created>1765623096173</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1765623096173</updated>
+    </task>
+    <task id="LOCAL-00030" summary="feat: add context loaders and related classes for improved context management">
+      <option name="closed" value="true" />
+      <created>1765662965999</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1765662965999</updated>
+    </task>
+    <task id="LOCAL-00031" summary="feat: add context loaders and related classes for improved context management">
+      <option name="closed" value="true" />
+      <created>1765884833937</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1765884833937</updated>
+    </task>
+    <task id="LOCAL-00032" summary="feat: refactor command annotation to use name and improve argument handling">
+      <option name="closed" value="true" />
+      <created>1766449304298</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1766449304298</updated>
+    </task>
+    <task id="LOCAL-00033" summary="feat: implement event model, repository, and service for event management">
+      <option name="closed" value="true" />
+      <created>1766449359159</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1766449359159</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -685,10 +618,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Add Dockerfile for multi-stage build and GitHub Actions workflow for deployment" />
-    <MESSAGE value="Enhance deployment workflow with JAR verification and updated flyctl installation" />
-    <MESSAGE value="init" />
-    <MESSAGE value="fix autodeploy" />
     <MESSAGE value="fix autodeploy x2" />
     <MESSAGE value="fix autodeploy x3" />
     <MESSAGE value="fix autodeploy x4" />
@@ -710,7 +639,11 @@
     <MESSAGE value="remove redis" />
     <MESSAGE value="update database connection URL in fly.toml and add .gitignore for build directory" />
     <MESSAGE value="add reaction handling and user settings management; refactor services and update Docker configuration" />
-    <option name="LAST_COMMIT_MESSAGE" value="add reaction handling and user settings management; refactor services and update Docker configuration" />
+    <MESSAGE value="refactor: reorganize DTO packages, add new entity classes, and update repository methods" />
+    <MESSAGE value="feat: add context loaders and related classes for improved context management" />
+    <MESSAGE value="feat: refactor command annotation to use name and improve argument handling" />
+    <MESSAGE value="feat: implement event model, repository, and service for event management" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: implement event model, repository, and service for event management" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>
