@@ -8,7 +8,8 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@Command(value = "/start", description = "Запустить бота", aliases = {"/cтарт"}, maxArgs = 0)
+@Command(name = "start",
+        aliases = {"start", "cтарт"})
 public class StartCommand extends BotCommand {
     
     public StartCommand(TelegramSenderService senderService) {
@@ -25,5 +26,15 @@ public class StartCommand extends BotCommand {
                 "Давай вместе сделаем твоё путешествие в SAO незабываемым!";
         sendMessage(executor.getId(), message);
         deleteMessage(executor.getId(), messageId);
+    }
+    
+    @Override
+    public String getUsage() {
+        return "/" + getAliases()[0];
+    }
+    
+    @Override
+    public String getDescription() {
+        return "Запуск бота";
     }
 }

@@ -6,6 +6,8 @@ import dev.knalis.sao_telegram_bot.command.CommandArgs;
 import dev.knalis.sao_telegram_bot.model.user.Role;
 import dev.knalis.sao_telegram_bot.service.telegram.CommandService;
 import dev.knalis.sao_telegram_bot.service.telegram.TelegramSenderService;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.springframework.context.annotation.Lazy;
 
 import java.util.Arrays;
@@ -13,15 +15,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Command(
-        value = "/help",
-        description = "Получить справочник по командам",
-        aliases = {"/h", "/?"},
-        minArgs = 0,
-        maxArgs = 0
+        name = "help",
+        aliases = {"help", "h", "?"}
 )
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class HelpCommand extends BotCommand {
 
-    private final CommandService commandService;
+    CommandService commandService;
 
     public HelpCommand(TelegramSenderService senderService, @Lazy CommandService commandService) {
         super(senderService);
@@ -36,51 +36,59 @@ public class HelpCommand extends BotCommand {
         sendMessage(executor.getId(), text);
         deleteMessage(executor.getId(), messageId);
     }
-
+    
+    @Override
+    public String getUsage() {
+        return "/" + getAliases()[0];
+    }
+    
+    @Override
+    public String getDescription() {
+        return "Справочник по командам";
+    }
+    
     public String composeText(List<Role> roles) {
         var commands = commandService.getCommands();
-        StringBuilder builder = new StringBuilder();
-
-        builder.append("<b>📖 Справочник по командам</b>\n\n")
-                .append("Каждая команда может иметь сокращения (алиасы) и ограничения по аргументам.\n\n");
-
+        StringBuilder b = new StringBuilder();
+        
+        b.append("<b>📖 Команды</b>\n")
+                .append("<i>Доступные вам команды и их описание</i>\n\n");
+        
         for (var command : commands) {
+            
+            if (!command.isVisible()) continue;
+            
             if (command.getAllowedRoles() != null && command.getAllowedRoles().length > 0) {
-                boolean hasAccess = Arrays.stream(command.getAllowedRoles())
+                boolean allowed = Arrays.stream(command.getAllowedRoles())
                         .anyMatch(roles::contains);
-                if (!hasAccess) continue;
+                if (!allowed) continue;
             }
-
-            builder.append("<b>")
-                    .append(command.getValue())
-                    .append("</b> ");
-
-            if (command.getAliases() != null && command.getAliases().length > 0) {
-                builder.append("<i>")
-                        .append(formatAliases(command))
-                        .append("</i>");
-            }
-
-            builder.append("\n— ")
-                    .append(command.getDescription() != null ? command.getDescription() : "Без описания")
+            
+            b.append("🔹 <b>")
+                    .append(formatAliasesInline(command))
+                    .append("</b>\n");
+            
+            b.append(command.getDescription() != null
+                            ? command.getDescription()
+                            : "<i>Без описания</i>")
                     .append("\n");
-
-            if (command.getUsage() != null && !command.getUsage().isEmpty()) {
-                builder.append("Пример: <b>")
+            
+            if (command.getUsage() != null && !command.getUsage().isBlank()) {
+                b.append("<i>Использование:</i> <code>")
                         .append(command.getUsage())
-                        .append("</b>\n");
+                        .append("</code>\n");
             }
-
-            builder.append("\n");
+            
+            b.append("\n");
         }
-
-        builder.append("<i>Используйте команды без скобок и символов </i>");
-        return builder.toString();
+        
+        b.append("<i>Команды вводятся без скобок</i>");
+        return b.toString();
     }
-
-    private String formatAliases(BotCommand command) {
+    
+    private String formatAliasesInline(BotCommand command) {
         return Arrays.stream(command.getAliases())
-                .map(a -> "<code>" + a + "</code>")
+                .map(a -> "/" + a)
                 .collect(Collectors.joining(", "));
     }
 }

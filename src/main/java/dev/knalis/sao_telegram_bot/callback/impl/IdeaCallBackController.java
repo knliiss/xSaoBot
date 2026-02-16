@@ -57,17 +57,15 @@ public class IdeaCallBackController extends AbstractCallBackController {
     }
     
     @CallBackMethod("/delete/{ideaId}/{page}")
-    public void delete(@PathVariable("page") int page, @PathVariable("ideaId") String ideaId, CallBackInfo info) {
+    public void delete(@PathVariable("ideaId") long ideaId, @PathVariable("page") int page, CallBackInfo info) {
         var chatId = info.getUser().getId();
         
-        if (!ideaService.canDelete(Long.parseLong(ideaId), chatId)) {
-            sendMessage(chatId, "❌ У вас нет прав для выполнения этого действия.");
-            return;
-        }
-        
         safeExecute(chatId, () -> {
-            long id = Long.parseLong(ideaId);
-            ideaService.delete(id);
+            if (!ideaService.canDelete(ideaId, chatId)) {
+                sendMessage(chatId, "❌ У вас нет прав для выполнения этого действия.");
+                return;
+            }
+            ideaService.delete(ideaId);
             menuCallBackController.ideaMenu(chatId, page, info);
         }, "❌ Не удалось удалить идею. Попробуйте позже.");
     }
@@ -105,7 +103,7 @@ public class IdeaCallBackController extends AbstractCallBackController {
         }
         
         safeExecute(chatId, () -> {
-            ideaService.updateStatus(ideaId, IdeaStatus.valueOf(action));
+            ideaService.updateStatus(ideaId, IdeaStatus.valueOf(action.toUpperCase()));
             var message = "✅ Действие выполнено!\n\n" +
                     "Перезапустите просмотр идеи, чтобы увидеть обновленный статус.";
             sendMessage(chatId, message);

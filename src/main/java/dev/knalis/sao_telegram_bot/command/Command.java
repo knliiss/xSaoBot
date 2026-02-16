@@ -12,10 +12,10 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Component
 public @interface Command {
-    String value();
-    String description() default "";
-    String[] aliases() default {};
+    String name();
+    String[] aliases();
     Role[] allowedRoles() default {Role.USER};
+    boolean visible() default true;
     int minArgs() default 0;
-    int maxArgs() default Integer.MAX_VALUE;
+    int maxArgs() default 0;
 }

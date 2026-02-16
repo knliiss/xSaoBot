@@ -11,7 +11,9 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@Command(value = "/menu", description = "Открыть главное меню", aliases = {"/m", "/меню"}, maxArgs = 0)
+@Command(name = "menu"
+        , aliases = {"menu", "m", "меню"}
+)
 public class MenuCommand extends BotCommand {
     
     ComposerFactory composerFactory;
@@ -33,5 +35,15 @@ public class MenuCommand extends BotCommand {
         );
         sendMessage(executor.getId(), message);
         deleteMessage(executor.getId(), messageId);
+    }
+    
+    @Override
+    public String getUsage() {
+        return "/" + getAliases()[0];
+    }
+    
+    @Override
+    public String getDescription() {
+        return "Вызов меню";
     }
 }

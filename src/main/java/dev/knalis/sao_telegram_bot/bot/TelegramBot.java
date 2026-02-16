@@ -26,15 +26,27 @@ public class TelegramBot extends TelegramLongPollingBot {
     public TelegramBot(@Lazy TelegramFacade facade) {
         this.facade = facade;
     }
-
+    
     @PostConstruct
     public void init() {
-        try {
-            TelegramBotsApi api = new TelegramBotsApi(DefaultBotSession.class);
-            api.registerBot(this);
-            log.info("Bot registered via polling successfully");
-        } catch (TelegramApiException e) {
-            log.error("Failed to register bot", e);
+        final int attempts = 3;
+        final long[] delaysMs = {2000L, 5000L, 10000L};
+        
+        for (int attempt = 1; attempt <= attempts; attempt++) {
+            try {
+                this.clearWebhook();
+                TelegramBotsApi api = new TelegramBotsApi(DefaultBotSession.class);
+                api.registerBot(this);
+                log.info("Bot registered via polling successfully");
+                return;
+            } catch (TelegramApiException e) {
+                if (attempt < attempts) {
+                    log.warn("Attempt {} to register bot failed (will retry in {} ms): {}", attempt, delaysMs[attempt - 1], e.getMessage());
+                    try { Thread.sleep(delaysMs[attempt - 1]); } catch (InterruptedException ie) { Thread.currentThread().interrupt(); return; }
+                } else {
+                    log.error("Failed to register bot after {} attempts", attempts, e);
+                }
+            }
         }
     }
 
